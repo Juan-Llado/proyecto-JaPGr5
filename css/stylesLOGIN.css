@@ -1,0 +1,245 @@
+ body:root[data-bs-theme="light"] {
+      --bs-body-bg: #ededed;
+    --bs-body-color: #222222; }
+
+    body:root[data-bs-theme="dark"] {
+    --bs-body-color: #222222; }
+
+
+/* clase para ponerle forma al div en si*/
+.customDiv {
+     position: relative; 
+    z-index: 10;
+    width: 440px;
+    margin: 50px auto 230px auto;
+    border-radius: 25px;
+    padding: 15px 15px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    -ms-border-radius: 25px;
+    -o-border-radius: 25px;
+    box-sizing: border-box;
+    background: linear-gradient(  #2a77aa ,transparent);
+    box-shadow:  10px 10px  60px  10px  #0007 !important;
+}
+
+/* clase para darle forma a los input del login*/
+.customInput {
+    width: 100%;
+    height: 45px;
+    border:none;
+    border-radius: 15px !important;
+    border-left: 5px solid #2a77aa;
+    border-top: 4px solid #2a77aa;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(143, 141, 137, 0.1);
+    box-sizing: border-box;
+    border: 0px 0px 4px 4px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    font-size: 16px;
+    background: linear-gradient(to right , #cac7c7 , #ededed);
+    font-family:"delius";
+}
+
+/* clase del google Fonts (la tipografia)*/
+.delius-regular {
+    font-family: "Delius", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
+
+/*clase del google Fonts ( tipografia del texto "iniciar secion;" */
+.lexend-deca {
+    font-family: "Lexend Deca", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 30px;
+    text-align: center;
+    color: #ffffff;
+    text-decoration: underline #20059bef;
+    background: #ffffff;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    background:none ;
+    margin-bottom: 20px !important;
+}
+.lexend-deca:hover{
+ transform: scale(1.2);
+}
+/* clase para el boton de submit (ingresar) */
+.custom-submit-and-title {
+    background: #2505dd;
+    width: 220px;
+    height: 40px;
+    margin: auto;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ededed;
+    font-size: 16px;
+    font-weight: bold;
+    box-sizing: border-box;
+    border: none;
+    border-left: 7px solid #1345ff;
+    border-right: 7px solid #1345ff;
+    letter-spacing: 4px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+.custom-submit-and-title:hover{
+    transform: scale(1.1);
+}
+
+
+
+/*codigos de estilos para crear la linea con texto que se encunetra en el login el cual tiene escrito de por medio "no tienes cuenta?*/
+.linea-con-texto {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  color:#000000;
+
+}
+
+.linea-con-texto::before,
+.linea-con-texto::after {
+  content: "";
+  flex: 1;
+  border-bottom: 2px solid #20059bef;
+  border-radius: 999px;
+  margin-top: 3px;
+}
+
+.linea-con-texto::before {
+  margin-right: 10px;
+}
+
+.linea-con-texto::after {
+  margin-left: 10px;
+}
+
+.google-btn{
+background: #dddddc;
+    width: 220px;
+    height: 40px;
+    margin: 20px auto !important;
+    border-radius: 30px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+    font-size: 18px;
+    font-weight: bold;
+    text-shadow: #3b3939 1px 1px 2px;
+    box-sizing: border-box;
+    border: none;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+.google-btn:hover {
+    transform: scale(1.1);
+}
+
+#logo-google{
+  height:30px;
+  width:30px;
+  overflow:hidden;
+}
+
+#login-line{
+    margin: 10px auto ;
+}
+
+.button-register{
+ background: #377585;
+    width: 300px;
+    height: 40px;
+    margin: 20px auto;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    text-shadow: #3b3939 1px 1px 2px;
+    box-sizing: border-box;
+    border: none;
+    border-left: 7px solid #364585;
+    border-right: 7px solid #364585;
+    letter-spacing: 2px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+.button-register:hover {
+    transform: scale(1.1);
+}
+
+
+a.link-olvido {
+  display: block !important;
+  text-align: right !important;
+  font-size: 14px !important;
+  color: #ededed !important;
+  text-decoration: none !important;
+  margin: 4px auto 30px auto !important; 
+}
+
+a.link-olvido:hover {
+  text-decoration: underline !important;
+}
+
+#pass{
+margin:0px;
+}
+
+
+#logo_principal{
+justify-content: center!important;
+ height:100%;
+ width: 500px;
+}
+
+.custom-p{
+    color: #ededed;
+    letter-spacing: 3px;
+    font-size: 16px;
+    font-weight: 700;
+    margin:0;
+    margin-bottom: 5px !important;
+    font-family: "delius";
+}
+
+.custom-darklightmode{
+ width: 100%;
+ height: 63px;
+ background:linear-gradient(to right,#2d1c8f , #2a77aa , transparent);
+ border:none;
+display: flex;
+ align-items: center;
+     justify-content: center;
+}
+
+.button-icon {
+    margin-top: 5px;
+    width: 100px;
+    height: 50px;
+    background: linear-gradient(to right, #010101 , #ededed);
+    border-radius: 90px;
+    position: absolute;
+    right: 20px;
+}
+
+#text-form-register{
+    color:#11a6eb94;
+}
+
+.listas-integrantes{
+    background:#010101;
+}
