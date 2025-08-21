@@ -4,6 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
   <title>eMercado - Todo lo que busques está aquí</title>
 
   <link href="https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
@@ -28,6 +29,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="sell.html">Vender</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="login.html">ingresa</a>
           </li>
           <li class="nav-item">
           </li>
@@ -88,6 +92,22 @@
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/index.js"></script>
   <script src="js/init.js"></script>
+
+  <script>
+const usuarioGuardado = localStorage.getItem("usuario");
+if(usuarioGuardado){
+  // Selecciono el a de la li  que apunta a login.html
+  const loginLink = document.querySelector('.navbar-nav a[href="login.html"]');
+  loginLink.setAttribute('target', '_blank');
+
+  loginLink.textContent = usuarioGuardado;
+  loginLink.href = "my-profile.html";
+
+}
+</script>
+
+
+
 </body>
 
 </html>
