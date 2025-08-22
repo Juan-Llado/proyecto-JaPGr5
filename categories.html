@@ -100,6 +100,14 @@
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/init.js"></script>
   <script src="js/categories.js"></script>
+    <script> 
+    if (!localStorage.getItem("loggedIn")) {
+      // Si no hay sesión iniciada, redirigir a login.html
+       alert("⚠️ Debes iniciar sesión para acceder a esta página");
+      window.location.href = "login.html";
+
+    }
+  </script>
 </body>
 
 </html>

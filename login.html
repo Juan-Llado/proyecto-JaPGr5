@@ -136,6 +136,9 @@ loginForm.addEventListener("submit", function(e){
     // Guardar usuario en localStorage
     localStorage.setItem("usuario", usuario);
 
+    // Guardar flag de sesión
+    localStorage.setItem("loggedIn", true);
+
     // Redirigir a index.html
     window.location.href = "index.html";
   }

@@ -93,6 +93,16 @@
   <script src="js/index.js"></script>
   <script src="js/init.js"></script>
 
+  <script> 
+    if (!localStorage.getItem("loggedIn")) {
+      // Si no hay sesión iniciada, redirigir a login.html
+       alert("⚠️ Debes iniciar sesión para acceder a esta página");
+      window.location.href = "login.html";
+
+    }
+
+  </script>
+
   <script>
 const usuarioGuardado = localStorage.getItem("usuario");
 if(usuarioGuardado){
