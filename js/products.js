@@ -1,62 +1,24 @@
+// products.js
+
 document.addEventListener('DOMContentLoaded', function () {
-  // Datos del JSON proporcionado
-  const categoryData = {
-    "catID": 101,
-    "catName": "Autos",
-    "products": [
-      {
-        "id": 50921,
-        "name": "Chevrolet Onix Joy",
-        "description": "Generación 2019, variedad de colores. Motor 1.0, ideal para ciudad.",
-        "cost": 13500,
-        "currency": "USD",
-        "soldCount": 14,
-        "image": "img/prod50921_1.jpg"
-      },
-      {
-        "id": 50922,
-        "name": "Fiat Way",
-        "description": "La versión de Fiat que brinda confort y a un precio accesible.",
-        "cost": 14500,
-        "currency": "USD",
-        "soldCount": 52,
-        "image": "img/prod50922_1.jpg"
-      },
-      {
-        "id": 50923,
-        "name": "Suzuki Celerio",
-        "description": "Un auto que se ha ganado la buena fama por su economía con el combustible.",
-        "cost": 12500,
-        "currency": "USD",
-        "soldCount": 25,
-        "image": "img/prod50923_1.jpg"
-      },
-      {
-        "id": 50924,
-        "name": "Peugeot 208",
-        "description": "El modelo de auto que se sigue renovando y manteniendo su prestigio en comodidad.",
-        "cost": 15200,
-        "currency": "USD",
-        "soldCount": 17,
-        "image": "img/prod50924_1.jpg"
-      },
-      {
-        "id": 50925,
-        "name": "Bugatti Chiron",
-        "description": "El mejor hiperdeportivo de mundo. Producción limitada a 500 unidades.",
-        "cost": 3500000,
-        "currency": "USD",
-        "soldCount": 0,
-        "image": "img/prod50925_1.jpg"
-      }
-    ]
-  };
+  // Mostrar el email del usuario almacenado en localStorage
+  const userEmail = localStorage.getItem('userEmail');
+  if (userEmail) {
+    document.getElementById('userEmail').textContent = userEmail;
+  }
 
   const productosContainer = document.getElementById('productos-container');
   const categoryTitle = document.getElementById('category-title');
-
-  // Mostrar el nombre de la categoría
-  categoryTitle.textContent = categoryData.catName;
+  const sortDropdown = document.getElementById('sort-dropdown');
+  
+  // Obtener el catID de la URL o usar valor por defecto
+  const urlParams = new URLSearchParams(window.location.search);
+  let catID = urlParams.get('catID');
+  
+  // Si no hay catID en la URL, usar el valor por defecto (101)
+  if (!catID) {
+    catID = 101;
+  }
 
   // Función para formatear el precio
   function formatPrice(cost, currency) {
@@ -72,6 +34,16 @@ document.addEventListener('DOMContentLoaded', function () {
   function renderizarProductos(products) {
     productosContainer.innerHTML = '';
 
+    if (products.length === 0) {
+      productosContainer.innerHTML = `
+        <div class="col-12 text-center py-5">
+          <i class="bi bi-exclamation-circle" style="font-size: 3rem;"></i>
+          <h4 class="mt-3">No hay productos en esta categoría</h4>
+        </div>
+      `;
+      return;
+    }
+
     products.forEach(producto => {
       const productoHTML = `
         <div class="col-md-4 col-sm-6 mb-4">
@@ -84,8 +56,8 @@ document.addEventListener('DOMContentLoaded', function () {
               <p class="producto-vendidos">
                 <i class="bi bi-people-fill"></i> ${producto.soldCount} vendidos
               </p>
-             <button class="btn btn-primary w-100 btn-detalles">
-                   <i class="bi bi-box-arrow-up-right"></i> Ver detalles
+              <button class="btn btn-primary w-100 btn-detalles">
+                <i class="bi bi-box-arrow-up-right"></i> Ver detalles
               </button>
             </div>
           </div>
@@ -97,8 +69,8 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Función para ordenar productos
-  function ordenarProductos(criterio) {
-    const productos = [...categoryData.products];
+  function ordenarProductos(products, criterio) {
+    const productos = [...products];
 
     switch (criterio) {
       case 'relevantes':
@@ -114,12 +86,66 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  // Función para cargar los datos de la categoría
+  function cargarCategoria(catID) {
+    // Mostrar indicador de carga
+    productosContainer.innerHTML = `
+      <div class="col-12 text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-3">Cargando productos...</p>
+      </div>
+    `;
+
+    // Hacer la solicitud a la API
+    fetch(`https://japceibal.github.io/emercado-api/cats_products/${catID}.json`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('No se pudo cargar la categoría');
+        }
+        return response.json();
+      })
+      .then(categoryData => {
+        // Mostrar el nombre de la categoría
+        categoryTitle.textContent = categoryData.catName;
+
+        // Guardar los productos para poder ordenarlos después
+        window.currentProducts = categoryData.products;
+
+        // Renderizar productos inicialmente (ordenados por más vendidos)
+        const productosOrdenados = ordenarProductos(window.currentProducts, 'relevantes');
+        renderizarProductos(productosOrdenados);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        productosContainer.innerHTML = `
+          <div class="col-12 text-center py-5">
+            <i class="bi bi-exclamation-triangle" style="font-size: 3rem;"></i>
+            <h4 class="mt-3">Error al cargar los productos</h4>
+            <p>${error.message}</p>
+            <button class="btn btn-primary mt-3" onclick="cargarCategoria(${catID})">
+              Reintentar
+            </button>
+          </div>
+        `;
+      });
+  }
+
   // Manejar el cambio en el dropdown de ordenamiento
-  document.getElementById('sort-dropdown').addEventListener('change', function (e) {
-    const productosOrdenados = ordenarProductos(e.target.value);
-    renderizarProductos(productosOrdenados);
+  sortDropdown.addEventListener('change', function (e) {
+    if (window.currentProducts) {
+      const productosOrdenados = ordenarProductos(window.currentProducts, e.target.value);
+      renderizarProductos(productosOrdenados);
+    }
   });
 
-  // Renderizar productos inicialmente (ordenados por más vendidos)
-  renderizarProductos(ordenarProductos('relevantes'));
+  // Función para cerrar sesión
+  window.logout = function() {
+    localStorage.removeItem('userEmail');
+    window.location.href = 'index.html';
+  };
+
+  // Iniciar la carga de la categoría
+  cargarCategoria(catID);
 });
