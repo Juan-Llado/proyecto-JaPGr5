@@ -195,9 +195,9 @@
         }
 
         #logo_principal{
-        justify-content: center!important;
+        justify-self: center;
          height:100%;
-         width: 500px;
+         width: 300px;
         }
 
         .custom-p{
@@ -369,6 +369,12 @@
                 width: 80px;
                 height: 40px;
             }
+            #logo_principal {
+           margin-left: 10px;
+           margin-right: auto;
+            max-width: 60%;
+            height: auto;
+        }
         }
         
         @media screen and (max-width: 400px) {
@@ -401,6 +407,12 @@
             a.link-olvido {
                 font-size: 12px !important;
             }
+            #logo_principal {
+           margin-left: 10px;
+           margin-right: auto;
+            max-width: 60%;
+            height: auto;
+        }
         }
         
         /* Para tablets y pantallas medianas */
@@ -435,14 +447,16 @@
             .linea-con-texto span {
                 font-size: 14px;
             }
+             #logo_principal {
+           margin-left: 10px;
+           margin-right: auto;
+            max-width: 60%;
+            height: auto;
+        }
         }
         
         /* Asegurar que las imágenes sean responsivas */
-        #logo_principal {
-            max-width: 100%;
-            height: auto;
-        }
-        
+       
         #logo-google {
             max-width: 100%;
         }
