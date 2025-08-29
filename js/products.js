@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Función para cerrar sesión
   window.logout = function() {
-    localStorage.removeItem('usuario');
+    localStorage.clear();
     window.location.href = 'index.html';
   };
 
