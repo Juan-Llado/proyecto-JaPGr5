@@ -2,9 +2,9 @@
 
 document.addEventListener('DOMContentLoaded', function () {
   // Mostrar el email del usuario almacenado en localStorage
-  const userEmail = localStorage.getItem('userEmail');
-  if (userEmail) {
-    document.getElementById('userEmail').textContent = userEmail;
+  const usuario = localStorage.getItem('usuario');
+  if (usuario) {
+    document.getElementById('userEmail').textContent = usuario;
   }
 
   const productosContainer = document.getElementById('productos-container');
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Función para cerrar sesión
   window.logout = function() {
-    localStorage.removeItem('userEmail');
+    localStorage.removeItem('usuario');
     window.location.href = 'index.html';
   };
 
