@@ -20,6 +20,62 @@ document.addEventListener('DOMContentLoaded', function () {
     catID = 101;
   }
 
+  // Crear elementos para el filtro con el dropdown
+  const filterContainer = document.createElement('div');
+  filterContainer.className = 'row mb-4';
+  filterContainer.innerHTML = `
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row align-items-end">
+            <div class="col-md-3">
+              <label for="min-price" class="form-label">Precio mínimo</label>
+              <input type="number" class="form-control" id="min-price" placeholder="Mínimo" min="0">
+            </div>
+            <div class="col-md-3">
+              <label for="max-price" class="form-label">Precio máximo</label>
+              <input type="number" class="form-control" id="max-price" placeholder="Máximo" min="0">
+            </div>
+            <div class="col-md-3">
+              <label for="sort-dropdown" class="form-label">Ordenar por</label>
+              <select class="form-select" id="sort-dropdown">
+                <option value="relevantes">Más relevantes</option>
+                <option value="precio-asc">Precio: menor a mayor</option>
+                <option value="precio-desc">Precio: mayor a menor</option>
+                <option value="nombre-asc">Nombre: A-Z</option>
+                <option value="vendidos-asc">Vendidos: menor a mayor</option>
+                <option value="vendidos-desc">Vendidos: mayor a menor</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <button class="btn btn-primary w-100 mb-1" id="apply-filter">
+                <i class="bi bi-funnel"></i> Aplicar filtros
+              </button>
+              <button class="btn btn-outline-secondary w-100" id="clear-filter">
+                <i class="bi bi-x-circle"></i> Limpiar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Reemplazar el dropdown original con el nuevo contenedor
+  if (sortDropdown && sortDropdown.parentNode) {
+    sortDropdown.parentNode.replaceChild(filterContainer, sortDropdown);
+  } else {
+    // Si no existe el dropdown original, insertar el contenedor antes de los productos
+    productosContainer.parentNode.insertBefore(filterContainer, productosContainer);
+  }
+
+  // Obtener referencias a los elementos después de crearlos
+  const newSortDropdown = document.getElementById('sort-dropdown');
+  const minPriceInput = document.getElementById('min-price');
+  const maxPriceInput = document.getElementById('max-price');
+  const applyFilterBtn = document.getElementById('apply-filter');
+  const clearFilterBtn = document.getElementById('clear-filter');
+
   // Función para formatear el precio
   function formatPrice(cost, currency) {
     return new Intl.NumberFormat('es-UY', {
@@ -30,6 +86,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }).format(cost);
   }
 
+  // Función para filtrar productos por rango de precio
+  function filtrarPorPrecio(products, minPrice, maxPrice) {
+    return products.filter(producto => {
+      const precio = producto.cost;
+      return (!minPrice || precio >= minPrice) && (!maxPrice || precio <= maxPrice);
+    });
+  }
+
   // Función para renderizar los productos
   function renderizarProductos(products) {
     productosContainer.innerHTML = '';
@@ -38,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
       productosContainer.innerHTML = `
         <div class="col-12 text-center py-5">
           <i class="bi bi-exclamation-circle" style="font-size: 3rem;"></i>
-          <h4 class="mt-3">No hay productos en esta categoría</h4>
+          <h4 class="mt-3">No hay productos que coincidan con los filtros</h4>
         </div>
       `;
       return;
@@ -81,8 +145,47 @@ document.addEventListener('DOMContentLoaded', function () {
         return productos.sort((a, b) => b.cost - a.cost);
       case 'nombre-asc':
         return productos.sort((a, b) => a.name.localeCompare(b.name));
+      case 'vendidos-asc':
+        return productos.sort((a, b) => a.soldCount - b.soldCount);
+      case 'vendidos-desc':
+        return productos.sort((a, b) => b.soldCount - a.soldCount);
       default:
         return productos;
+    }
+  }
+
+  // Función para aplicar todos los filtros
+  function aplicarFiltrosYOrdenamiento() {
+    if (!window.currentProducts) return;
+    
+    const minPrice = parseFloat(minPriceInput.value) || null;
+    const maxPrice = parseFloat(maxPriceInput.value) || null;
+    const ordenSeleccionado = newSortDropdown.value;
+    
+    // Validar que el mínimo no sea mayor que el máximo
+    if (minPrice !== null && maxPrice !== null && minPrice > maxPrice) {
+      alert('El precio mínimo no puede ser mayor que el precio máximo');
+      return;
+    }
+    
+    // Aplicar filtro de precio
+    window.filteredProducts = filtrarPorPrecio(window.currentProducts, minPrice, maxPrice);
+    
+    // Aplicar ordenamiento
+    const productosOrdenados = ordenarProductos(window.filteredProducts, ordenSeleccionado);
+    renderizarProductos(productosOrdenados);
+  }
+
+  // Función para limpiar todos los filtros
+  function limpiarFiltros() {
+    minPriceInput.value = '';
+    maxPriceInput.value = '';
+    newSortDropdown.value = 'relevantes';
+    
+    if (window.currentProducts) {
+      window.filteredProducts = [...window.currentProducts];
+      const productosOrdenados = ordenarProductos(window.filteredProducts, 'relevantes');
+      renderizarProductos(productosOrdenados);
     }
   }
 
@@ -112,9 +215,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Guardar los productos para poder ordenarlos después
         window.currentProducts = categoryData.products;
+        window.filteredProducts = [...window.currentProducts];
 
         // Renderizar productos inicialmente (ordenados por más vendidos)
-        const productosOrdenados = ordenarProductos(window.currentProducts, 'relevantes');
+        const productosOrdenados = ordenarProductos(window.filteredProducts, 'relevantes');
         renderizarProductos(productosOrdenados);
       })
       .catch(error => {
@@ -132,12 +236,18 @@ document.addEventListener('DOMContentLoaded', function () {
       });
   }
 
-  // Manejar el cambio en el dropdown de ordenamiento
-  sortDropdown.addEventListener('change', function (e) {
-    if (window.currentProducts) {
-      const productosOrdenados = ordenarProductos(window.currentProducts, e.target.value);
-      renderizarProductos(productosOrdenados);
-    }
+  // Event listeners
+  newSortDropdown.addEventListener('change', aplicarFiltrosYOrdenamiento);
+  applyFilterBtn.addEventListener('click', aplicarFiltrosYOrdenamiento);
+  clearFilterBtn.addEventListener('click', limpiarFiltros);
+
+  // También aplicar filtros cuando se presiona Enter en los campos de precio
+  minPriceInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') aplicarFiltrosYOrdenamiento();
+  });
+  
+  maxPriceInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') aplicarFiltrosYOrdenamiento();
   });
 
   // Función para cerrar sesión
