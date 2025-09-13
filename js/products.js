@@ -7,18 +7,13 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('userEmail').textContent = usuario;
   }
 
-  const productosContainer = document.getElementById('productos-container');
-  const categoryTitle = document.getElementById('category-title');
-  const sortDropdown = document.getElementById('sort-dropdown');
-  
-  // Obtener el catID de la URL o usar valor por defecto
-  const urlParams = new URLSearchParams(window.location.search);
-  let catID = urlParams.get('catID');
-  
-  // Si no hay catID en la URL, usar el valor por defecto (101)
-  if (!catID) {
-    catID = 101;
-  }
+  let productosContainer = document.getElementById('productos-container');
+  let categoryTitle = document.getElementById('category-title');
+  let sortDropdown = document.getElementById('sort-dropdown');
+
+  //Traer la ID de la categoria para mostrar los datos que correspondan
+let catID=localStorage.getItem("catID");
+
 
   // Crear elementos para el filtro con el dropdown
   const filterContainer = document.createElement('div');
@@ -108,10 +103,11 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    products.forEach(producto => {
-      const productoHTML = `
-        <div class="col-md-4 col-sm-6 mb-4">
-          <div class="card producto-card h-100">
+ products.forEach(producto => {
+      const productoDiv = document.createElement("div");
+      productoDiv.className = "col-md-4 col-sm-6 mb-4";
+      productoDiv.innerHTML=`
+          <div class="card producto-card h-100 align-center">
             <img src="${producto.image}" class="card-img-top producto-imagen" alt="${producto.name}" onerror="this.src='img/no-image.jpg'">
             <div class="card-body producto-body">
               <h5 class="card-title producto-titulo">${producto.name}</h5>
@@ -120,15 +116,19 @@ document.addEventListener('DOMContentLoaded', function () {
               <p class="producto-vendidos">
                 <i class="bi bi-people-fill"></i> ${producto.soldCount} vendidos
               </p>
-              <button class="btn btn-primary w-100 btn-detalles">
+              <button class="btn btn-primary w-100 btn-detalles" >
                 <i class="bi bi-box-arrow-up-right"></i> Ver detalles
               </button>
             </div>
           </div>
-        </div>
       `;
-
-      productosContainer.innerHTML += productoHTML;
+      const botonDetalles = productoDiv.querySelector(".btn-detalles"); //Te manda a la pagina donde se muestra la info de cada producto.
+      botonDetalles.addEventListener("click", function() {  
+        localStorage.setItem("id", producto.id); 
+        window.location.href="product-info.html"; 
+        console.log("Producto ID guardado:", producto.id);
+      })
+      productosContainer.appendChild(productoDiv);
     });
   }
 
