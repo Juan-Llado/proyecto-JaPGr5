@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
   
   // Si no hay catID en la URL, usar el valor por defecto (101)
   if (!catID) {
-    catID = 101;
+    catID = 102;
   }
 
   // Crear elementos para el filtro con el dropdown
