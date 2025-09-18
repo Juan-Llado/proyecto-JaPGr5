@@ -12,13 +12,12 @@ document.addEventListener('DOMContentLoaded', function () {
   const sortDropdown = document.getElementById('sort-dropdown');
   
   // Obtener el catID de la URL o usar valor por defecto
-  const urlParams = new URLSearchParams(window.location.search);
-  let catID = urlParams.get('catID');
-  
-  // Si no hay catID en la URL, usar el valor por defecto (101)
-  if (!catID) {
-    catID = 101;
-  }
+  let catID = localStorage.getItem("catID");
+
+if (!catID) {
+  catID = 101; // o el valor que quieras usar como respaldo
+}
+
 
   // Crear elementos para el filtro con el dropdown
   const filterContainer = document.createElement('div');
