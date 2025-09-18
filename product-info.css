@@ -1,5 +1,5 @@
 :root {
---primary-green: #182f38;
+--primary-green: rgb(26, 53, 64);
     --secondary-green: #4caf50;
     --light-green: #e8f5e9;
     --dark-green: #1b5e20;
@@ -21,6 +21,7 @@ html, body {      /*Deja el footer al final de la pagina*/
     body {
       display: flex;
       flex-direction: column;
+      background: linear-gradient(135deg, var(--dark-green) 0%, var(--primary-green) 100%);
     }
     #contenedor {
       flex: 1;
@@ -39,15 +40,32 @@ html, body {      /*Deja el footer al final de la pagina*/
 }
 
 #perfil{
-    width: 40px;
+  width: 40px;
   height: 40px;
   object-fit: cover;
   border-radius: 50%;
 }
 
+#carritoNav{    /*los iconos de Boostrap se tratan como texto*/
+  font-size: 30px;
+  color: white;
+  margin-right: 25px;
+}
+
+#contadorCarrito{
+  position: absolute;
+  margin-top: 0;
+  translate:middle;
+  border-radius: 50px;
+  background-color: #4caf50;
+  color: #212121;
+  font-size: 15px;
+  display: none;
+}
+
 #btnPerfil{
   border-radius: 50px;
-
+  margin: 0px;
 }
 
 /* Footer */
@@ -73,21 +91,25 @@ html, body {      /*Deja el footer al final de la pagina*/
     text-decoration: underline;
   }
 
+/*---------------------------------------*/
+
+
 #contenedor{
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 80vh;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 #info{
   display: flex;
+  flex-direction: column;
+  padding: 20px;
   width: 300px;
-  height:400px;
-  border: 2px solid #182f38;
-  border-color: #182f38;
+  height:auto;
   border-radius: 20px;
-  align-items: center;
+  background-color: #f5f5f5;
 }
 
 .row{
@@ -95,20 +117,61 @@ html, body {      /*Deja el footer al final de la pagina*/
   justify-content: center;
 }
 
-#agregarCarrito{
-  font-size: 40px;
-  margin-left: 40%;
-  }
-
 #info h5{
-  color:darkblue;
+  color:#1b5e20;
+  font-weight: bold;
+  font-family: 'Raleway', sans-serif;
   text-align: center;
-  margin-top: 0px;
-  
+  font-size: 25px;
+  margin:15px;
+  margin-bottom: 40px;
+}
+
+#precio{
+  color:#1b5e20;
+  font-weight: bold;
+  font-family: 'Raleway', sans-serif;
+  text-align: center;
+  font-size: 25px;
+}
+
+.estiloInfo{
+  color:#212121;
+  font-family: 'Raleway', sans-serif;
+  font-size: 16px;
+}
+
+#vendidos{
+  margin-top: 20px;
+}
+
+.btn{
+  cursor: pointer;
+  font-size: 40px;
+  color:#212121;
+  text-align: center;
+  outline: none;
+
+}
+
+.btn:focus {
+  outline: none;
+  box-shadow: none;
+  border: none;
 }
 
 /*CARRUSEL*/
 
-#carrusel{
-  width: 500px;
+#contenedorCarrusel{
+display: flex;
+align-items: center;
+}
+
+
+#carrusel,#contImg{
+  border-radius: 50px;
+}
+
+.imagenes{
+  border-radius: 50px;
 }

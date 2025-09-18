@@ -2,6 +2,8 @@ let productoID=localStorage.getItem("id");
 let info=document.getElementById("info")
 let carrusel=document.getElementById("contImg");
 let divPrincipal=document.getElementById("columna1");
+let contadorCarrito=document.getElementById("contadorCarrito");
+
 
     fetch(`https://japceibal.github.io/emercado-api/products/${productoID}.json`)
       .then(response => {
@@ -11,20 +13,24 @@ let divPrincipal=document.getElementById("columna1");
         return response.json();
       })
       .then(producto => {
-      window.imagenes= Object.values(producto.images).filter(img => typeof img==="string");
-      console.log(window.imagenes);
-      info.className = "col-md-4 col-sm-6 mb-4";
+      window.imagenes= Object.values(producto.images).filter(img => typeof img==="string"); //guardo url de las imagenes en un array.
       info.innerHTML=`
-            <div>
               <h5>${producto.name}</h5>
-              <p>${producto.description}</p>
-              <p>${producto.cost} ${producto.currency}</p>
-              <p>
+              <p class="estiloInfo">${producto.description}</p>
+              <p class="estiloInfo"  id="vendidos">
                 <i class="bi bi-people-fill"></i> ${producto.soldCount} vendidos
               </p>
-              <botton class="bi bi-cart-plus" id="agregarCarrito"></botton>
-            </div>
-      `; cargarImagenes(window.imagenes);
+              <p id="precio">${producto.cost} ${producto.currency}</p>
+              <button class="btn ${clase}" id="agregarCarrito" data-id=${producto.id}></button>  
+              
+      `; //uso el atributo data-* (*en este caso lo llame id) en vez de solo id para poder relacionar cada botón a
+      // su id correspodiente y asi poder guardar el icono de agregado,o no, para cada uno.
+      cargarImagenes(window.imagenes);
+      document.getElementById("agregarCarrito").addEventListener("click", () => {
+          carrito(producto);
+      });
+      
+      restaurarIconosCarrito();
     })
       .catch(error => {
         console.error('Error:', error);
@@ -41,7 +47,7 @@ let divPrincipal=document.getElementById("columna1");
      
 
       });
-  
+
 
 window.cargarImagenes=function cargarImagenes(imagenes){
     carrusel.innerHTML="";    /*Limpio el contenido anterior */
@@ -54,10 +60,65 @@ window.cargarImagenes=function cargarImagenes(imagenes){
       let imagen=document.createElement("img");      /*Recorro el arreglo (imagenes) que tiene los src */
         if(src){                    /*src lo elijo como clave,podria ser cualquier cosa */
             imagen.src=src;   /*Le asigno a el atributo src de img el src obtenido del fetch, los cuales puse en el arreglo */
-            imagen.classList.add("d-block","w-100");
+            imagen.classList.add("d-block","w-100","imagenes");
             divImg.appendChild(imagen);
             carrusel.appendChild(divImg);
         }
     
     });
 }
+
+
+let contador = parseInt(localStorage.getItem('carritoContador')) || 0; //busco la variable contador en localStorage, si no esta la crea con valor 0.
+
+function badgeCarrito(){    //se muestra sobre el carrito en la barra superior si hay productos agregados. 
+  if (contador!=0){
+    contadorCarrito.style.display="inline-block";
+    contadorCarrito.innerHTML=contador;
+  }else{
+    contadorCarrito.style.display = "none";
+    contadorCarrito.innerText = "";
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  badgeCarrito();
+})
+
+
+let clase="bi-cart-plus";
+
+
+function carrito(producto) {
+  window.prodCarrito = JSON.parse(localStorage.getItem("carrito")) || [];   //creo un array para guardar los elementos que se agregan al carrito si no existe.
+  let btn = document.getElementById("agregarCarrito");
+  let indice = prodCarrito.findIndex(p => p.id === producto.id);  //busco el indice del producto en el array que contiene todos los elementos del carrito
+
+  if (indice !== -1) { //el producto ya esta en el carrito
+    prodCarrito.splice(indice, 1); //elimino el producto del array
+    btn.className = "btn bi bi-cart-plus"; 
+  } else {
+    prodCarrito.push(producto); //si no esta lo agrego al carrito
+    btn.className = "btn bi bi-cart-check-fill";
+  }
+
+  contador = prodCarrito.length; 
+  localStorage.setItem("carrito", JSON.stringify(prodCarrito)); //guardo el nuevo carrito
+  localStorage.setItem("carritoContador", contador);        //guardo el contador
+  console.log(contador);
+  badgeCarrito();
+}
+
+
+function restaurarIconosCarrito() {
+  let prodCarrito = JSON.parse(localStorage.getItem("carrito")) || []; 
+  let btn = document.getElementById("agregarCarrito");
+  let productoID = parseInt(btn.dataset.id); //lo convierto en un número para poder compararlo,porque los data se guardan como string.
+  
+  if (prodCarrito.some(prod => prod.id === productoID)) {
+    btn.className = "btn bi bi-cart-check-fill activo";
+  } else {
+    btn.className = "btn bi bi-cart-plus";
+  }
+}
+
