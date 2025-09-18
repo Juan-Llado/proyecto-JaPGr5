@@ -7,12 +7,16 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('userEmail').textContent = usuario;
   }
 
-  let productosContainer = document.getElementById('productos-container');
-  let categoryTitle = document.getElementById('category-title');
-  let sortDropdown = document.getElementById('sort-dropdown');
+  const productosContainer = document.getElementById('productos-container');
+  const categoryTitle = document.getElementById('category-title');
+  const sortDropdown = document.getElementById('sort-dropdown');
+  
+  // Obtener el catID de la URL o usar valor por defecto
+  let catID = localStorage.getItem("catID");
 
-  //Traer la ID de la categoria para mostrar los datos que correspondan
-let catID=localStorage.getItem("catID");
+if (!catID) {
+  catID = 101; // o el valor que quieras usar como respaldo
+}
 
 
   // Crear elementos para el filtro con el dropdown
