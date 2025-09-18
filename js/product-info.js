@@ -105,7 +105,6 @@ function carrito(producto) {
   contador = prodCarrito.length; 
   localStorage.setItem("carrito", JSON.stringify(prodCarrito)); //guardo el nuevo carrito
   localStorage.setItem("carritoContador", contador);        //guardo el contador
-  console.log(contador);
   badgeCarrito();
 }
 
@@ -122,3 +121,9 @@ function restaurarIconosCarrito() {
   }
 }
 
+
+  // Función para cerrar sesión
+  window.logout = function() {
+    localStorage.clear();
+    window.location.href = 'index.html';
+  };
