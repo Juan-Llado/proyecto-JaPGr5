@@ -107,10 +107,11 @@ if (!catID) {
       return;
     }
 
-    products.forEach(producto => {
-      const productoHTML = `
-        <div class="col-md-4 col-sm-6 mb-4">
-          <div class="card producto-card h-100">
+ products.forEach(producto => {
+      const productoDiv = document.createElement("div");
+      productoDiv.className = "col-md-4 col-sm-6 mb-4";
+      productoDiv.innerHTML=`
+          <div class="card producto-card h-100 align-center">
             <img src="${producto.image}" class="card-img-top producto-imagen" alt="${producto.name}" onerror="this.src='img/no-image.jpg'">
             <div class="card-body producto-body">
               <h5 class="card-title producto-titulo">${producto.name}</h5>
@@ -119,15 +120,19 @@ if (!catID) {
               <p class="producto-vendidos">
                 <i class="bi bi-people-fill"></i> ${producto.soldCount} vendidos
               </p>
-              <button class="btn btn-primary w-100 btn-detalles">
+              <button class="btn btn-primary w-100 btn-detalles" >
                 <i class="bi bi-box-arrow-up-right"></i> Ver detalles
               </button>
             </div>
           </div>
-        </div>
       `;
-
-      productosContainer.innerHTML += productoHTML;
+      const botonDetalles = productoDiv.querySelector(".btn-detalles"); //Te manda a la pagina donde se muestra la info de cada producto.
+      botonDetalles.addEventListener("click", function() {  
+        localStorage.setItem("id", producto.id); 
+        window.location.href="product-info.html"; 
+        console.log("Producto ID guardado:", producto.id);
+      })
+      productosContainer.appendChild(productoDiv);
     });
   }
 
