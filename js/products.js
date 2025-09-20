@@ -18,14 +18,24 @@ if (!catID) {
   catID = 101; // o el valor que quieras usar como respaldo
 }
 
-
-  // Crear elementos para el filtro con el dropdown
+  // Crear elementos para el filtro con el dropdown y el buscador
   const filterContainer = document.createElement('div');
   filterContainer.className = 'row mb-4';
   filterContainer.innerHTML = `
     <div class="col-md-12">
       <div class="card">
         <div class="card-body">
+          <!-- CAMPO DE BÚSQUEDA -->
+          <div class="row mb-3">
+            <div class="col-md-12">
+              <label for="search-input" class="form-label">
+                <i class="bi bi-search"></i> Buscar productos
+              </label>
+              <input type="search" class="form-control" id="search-input" 
+                     placeholder="Buscar por título o descripción..." autocomplete="off">
+            </div>
+          </div>
+          <!-- FILTROS EXISTENTES -->
           <div class="row align-items-end">
             <div class="col-md-3">
               <label for="min-price" class="form-label">Precio mínimo</label>
@@ -74,6 +84,7 @@ if (!catID) {
   const maxPriceInput = document.getElementById('max-price');
   const applyFilterBtn = document.getElementById('apply-filter');
   const clearFilterBtn = document.getElementById('clear-filter');
+  const searchInput = document.getElementById('search-input'); // Campo de búsqueda
 
   // Función para formatear el precio
   function formatPrice(cost, currency) {
@@ -90,6 +101,22 @@ if (!catID) {
     return products.filter(producto => {
       const precio = producto.cost;
       return (!minPrice || precio >= minPrice) && (!maxPrice || precio <= maxPrice);
+    });
+  }
+
+  // Función para filtrar productos por búsqueda de texto
+  function filtrarPorTexto(products, searchTerm) {
+    if (!searchTerm || searchTerm.trim() === '') {
+      return products;
+    }
+    
+    const termino = searchTerm.toLowerCase().trim();
+    
+    return products.filter(producto => {
+      const titulo = producto.name.toLowerCase();
+      const descripcion = producto.description.toLowerCase();
+      
+      return titulo.includes(termino) || descripcion.includes(termino);
     });
   }
 
@@ -158,13 +185,14 @@ if (!catID) {
     }
   }
 
-  // Función para aplicar todos los filtros
+  // Aplicar todos los filtros (incluyendo búsqueda)
   function aplicarFiltrosYOrdenamiento() {
     if (!window.currentProducts) return;
     
     const minPrice = parseFloat(minPriceInput.value) || null;
     const maxPrice = parseFloat(maxPriceInput.value) || null;
     const ordenSeleccionado = newSortDropdown.value;
+    const searchTerm = searchInput.value; // Obtener término de búsqueda
     
     // Validar que el mínimo no sea mayor que el máximo
     if (minPrice !== null && maxPrice !== null && minPrice > maxPrice) {
@@ -172,18 +200,26 @@ if (!catID) {
       return;
     }
     
-    // Aplicar filtro de precio
-    window.filteredProducts = filtrarPorPrecio(window.currentProducts, minPrice, maxPrice);
+    // APLICAR FILTROS EN ORDEN
+    // 1. Primero filtrar por texto de búsqueda
+    let productosFiltrados = filtrarPorTexto(window.currentProducts, searchTerm);
     
-    // Aplicar ordenamiento
+    // 2. Luego filtrar por precio
+    productosFiltrados = filtrarPorPrecio(productosFiltrados, minPrice, maxPrice);
+    
+    // 3. Guardar productos filtrados
+    window.filteredProducts = productosFiltrados;
+    
+    // 4. Aplicar ordenamiento
     const productosOrdenados = ordenarProductos(window.filteredProducts, ordenSeleccionado);
     renderizarProductos(productosOrdenados);
   }
 
-  // Función para limpiar todos los filtros
+  // Limpiar todos los filtros (incluyendo búsqueda)
   function limpiarFiltros() {
     minPriceInput.value = '';
     maxPriceInput.value = '';
+    searchInput.value = ''; // Limpiar campo de búsqueda
     newSortDropdown.value = 'relevantes';
     
     if (window.currentProducts) {
@@ -252,6 +288,11 @@ if (!catID) {
   
   maxPriceInput.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') aplicarFiltrosYOrdenamiento();
+  });
+
+  // Event listener: Búsqueda en tiempo real
+  searchInput.addEventListener('input', function() {
+    aplicarFiltrosYOrdenamiento();
   });
 
   // Función para cerrar sesión
