@@ -1,8 +1,13 @@
+
 let productoID=localStorage.getItem("id");
 let info=document.getElementById("info")
 let carrusel=document.getElementById("contImg");
 let divPrincipal=document.getElementById("columna1");
 let contadorCarrito=document.getElementById("contadorCarrito");
+let iconoCarrito=document.getElementById("carritoNav");
+let desplegableCarrito=document.getElementById("desplegableCarrito");
+let estrellas=document.querySelectorAll(".estrella");
+let btnEnviarComentario=document.getElementById("btnEnviarComentario");
 
 
     fetch(`https://japceibal.github.io/emercado-api/products/${productoID}.json`)
@@ -88,9 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let clase="bi-cart-plus";
 
+window.prodCarrito = JSON.parse(localStorage.getItem("carrito")) || []; //creo un array para guardar los elementos que se agregan al carrito si no existe.
 
 function carrito(producto) {
-  window.prodCarrito = JSON.parse(localStorage.getItem("carrito")) || [];   //creo un array para guardar los elementos que se agregan al carrito si no existe.
+   
   let btn = document.getElementById("agregarCarrito");
   let indice = prodCarrito.findIndex(p => p.id === producto.id);  //busco el indice del producto en el array que contiene todos los elementos del carrito
 
@@ -122,8 +128,9 @@ function restaurarIconosCarrito() {
 }
 
 
-  // Función para cerrar sesión
+// Función para cerrar sesión
   window.logout = function() {
     localStorage.clear();
     window.location.href = 'index.html';
   };
+
