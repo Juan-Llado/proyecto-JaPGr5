@@ -36,6 +36,22 @@ let btnEnviarComentario=document.getElementById("btnEnviarComentario");
       });
       
       restaurarIconosCarrito();
+      
+  
+      fetch(`https://japceibal.github.io/emercado-api/products_comments/${productoID}.json`)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('No se pudieron cargar los comentarios');
+    }
+    return response.json();
+  })
+  .then(comentarios => {
+    mostrarComentarios(comentarios);
+  })
+  .catch(error => {
+    console.error('Error al cargar comentarios:', error);
+  });
+
     })
       .catch(error => {
         console.error('Error:', error);
@@ -134,3 +150,23 @@ function restaurarIconosCarrito() {
     window.location.href = 'index.html';
   };
 
+
+  function mostrarComentarios(comentarios) {
+  const contenedorComentarios = document.getElementById("comentarios");
+
+  contenedorComentarios.innerHTML = "";
+
+  comentarios.forEach(comentario => {
+    const div = document.createElement("div");
+    div.classList.add("comentario");
+
+    div.innerHTML = `
+      <p><strong>${comentario.user}</strong> - ${comentario.dateTime}</p>
+      <p class="estrellas">${"★".repeat(comentario.score)}${"☆".repeat(5 - comentario.score)}</p>
+      <p>${comentario.description}</p>
+      <hr>
+    `;
+
+    contenedorComentarios.appendChild(div);
+  });
+}
