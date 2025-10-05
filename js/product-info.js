@@ -164,3 +164,187 @@ function restaurarIconosCarrito() {
     contenedorComentarios.appendChild(div);
   });
 }
+
+// Función para mostrar comentarios 
+function mostrarComentarios(comentarios) {
+  const contenedorComentarios = document.getElementById("comentarios");
+  contenedorComentarios.innerHTML = "";
+
+  // Crear el contenedor principal con título
+  const tituloComentarios = document.createElement("div");
+  tituloComentarios.className = "container mt-5";
+  tituloComentarios.innerHTML = `<h3 class="mb-4">Comentarios y Calificaciones</h3>`;
+  contenedorComentarios.appendChild(tituloComentarios);
+
+  // Contenedor para los comentarios
+  const listaComentarios = document.createElement("div");
+  listaComentarios.className = "container";
+  listaComentarios.id = "listaComentarios";
+
+  // Cargar comentario del usuario desde localStorage 
+  const comentarioUsuario = JSON.parse(localStorage.getItem(`comentario_${productoID}`));
+  
+  if (comentarioUsuario) {
+    const divUsuario = document.createElement("div");
+    divUsuario.classList.add("comentario", "comentario-usuario");
+    divUsuario.innerHTML = `
+      <p><strong>${comentarioUsuario.user}</strong> <span class="badge bg-primary">Tu comentario</span> - ${comentarioUsuario.dateTime}</p>
+      <p class="estrellas">${"★".repeat(comentarioUsuario.score)}${"☆".repeat(5 - comentarioUsuario.score)}</p>
+      <p>${comentarioUsuario.description}</p>
+      <hr>
+    `;
+    listaComentarios.appendChild(divUsuario);
+  }
+
+  // Mostrar comentarios existentes
+  comentarios.forEach(comentario => {
+    const div = document.createElement("div");
+    div.classList.add("comentario");
+    div.innerHTML = `
+      <p><strong>${comentario.user}</strong> - ${comentario.dateTime}</p>
+      <p class="estrellas">${"★".repeat(comentario.score)}${"☆".repeat(5 - comentario.score)}</p>
+      <p>${comentario.description}</p>
+      <hr>
+    `;
+    listaComentarios.appendChild(div);
+  });
+
+  contenedorComentarios.appendChild(listaComentarios);
+
+  // Agregar formulario de calificación solo si el usuario no ha calificado
+  if (!comentarioUsuario) {
+    agregarFormularioCalificacion();
+  }
+}
+
+// Función para agregar el formulario de calificación
+function agregarFormularioCalificacion() {
+  const contenedorComentarios = document.getElementById("comentarios");
+  
+  const formulario = document.createElement("div");
+  formulario.className = "container mt-5 mb-5";
+  formulario.innerHTML = `
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h4 class="card-title mb-4">Deja tu calificación</h4>
+        
+        <div class="mb-3">
+          <label class="form-label fw-bold">Tu puntuación:</label>
+          <div class="estrellas-calificacion" id="estrellasCalificacion">
+            <i class="bi bi-star estrella" data-value="1"></i>
+            <i class="bi bi-star estrella" data-value="2"></i>
+            <i class="bi bi-star estrella" data-value="3"></i>
+            <i class="bi bi-star estrella" data-value="4"></i>
+            <i class="bi bi-star estrella" data-value="5"></i>
+          </div>
+          <small class="text-muted d-block mt-2" id="mensajeCalificacion">Selecciona una calificación</small>
+        </div>
+
+        <div class="mb-3">
+          <label for="comentarioTexto" class="form-label fw-bold">Tu comentario:</label>
+          <textarea class="form-control" id="comentarioTexto" rows="3" placeholder="Cuéntanos tu experiencia con este producto..."></textarea>
+        </div>
+
+        <button class="btn btn-secondary" id="btnEnviarCalificacion" disabled>
+          Enviar
+        </button>
+      </div>
+    </div>
+  `;
+  
+  contenedorComentarios.appendChild(formulario);
+  inicializarCalificacion();
+}
+
+// Función para inicializar la funcionalidad de las estrellas
+function inicializarCalificacion() {
+  const estrellas = document.querySelectorAll('.estrella');
+  const btnEnviar = document.getElementById('btnEnviarCalificacion');
+  const mensajeCalificacion = document.getElementById('mensajeCalificacion');
+  let calificacionSeleccionada = 0;
+
+  // Hover sobre las estrellas
+  estrellas.forEach((estrella, index) => {
+    estrella.addEventListener('mouseenter', () => {
+      estrellas.forEach((e, i) => {
+        if (i <= index) {
+          e.classList.remove('bi-star');
+          e.classList.add('bi-star-fill');
+        } else {
+          e.classList.remove('bi-star-fill');
+          e.classList.add('bi-star');
+        }
+      });
+    });
+
+    // Click en la estrella
+    estrella.addEventListener('click', () => {
+      calificacionSeleccionada = parseInt(estrella.dataset.value);
+      btnEnviar.disabled = false;
+      
+      // Actualizar mensaje
+      const mensajes = ['Muy malo', 'Malo', 'Regular', 'Bueno', 'Excelente'];
+      mensajeCalificacion.textContent = `${calificacionSeleccionada} ${calificacionSeleccionada === 1 ? 'estrella' : 'estrellas'} - ${mensajes[calificacionSeleccionada - 1]}`;
+      mensajeCalificacion.style.color = '#198754';
+    });
+  });
+
+  // Mouseleave del contenedor de estrellas
+  document.getElementById('estrellasCalificacion').addEventListener('mouseleave', () => {
+    estrellas.forEach((e, i) => {
+      if (i < calificacionSeleccionada) {
+        e.classList.remove('bi-star');
+        e.classList.add('bi-star-fill');
+      } else {
+        e.classList.remove('bi-star-fill');
+        e.classList.add('bi-star');
+      }
+    });
+  });
+
+  // Enviar calificación
+  btnEnviar.addEventListener('click', () => {
+    const comentarioTexto = document.getElementById('comentarioTexto').value.trim();
+    
+    if (calificacionSeleccionada === 0) {
+      alert('Por favor, selecciona una calificación');
+      return;
+    }
+
+    if (comentarioTexto === '') {
+      alert('Por favor, escribe un comentario');
+      return;
+    }
+
+    // Crear objeto de comentario
+    const nuevoComentario = {
+      user: localStorage.getItem('userEmail') || 'Usuario',
+      score: calificacionSeleccionada,
+      description: comentarioTexto,
+      dateTime: new Date().toLocaleString('es-UY', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    };
+
+    // Guardar en localStorage
+    localStorage.setItem(`comentario_${productoID}`, JSON.stringify(nuevoComentario));
+
+    // Mostrar mensaje de éxito
+    btnEnviar.innerHTML = '¡Enviado!';
+    btnEnviar.classList.remove('btn-secondary');
+    btnEnviar.classList.add('btn-success');
+    btnEnviar.disabled = true;
+
+    // Recargar comentarios para mostrar el nuevo
+    setTimeout(() => {
+      fetch(`https://japceibal.github.io/emercado-api/products_comments/${productoID}.json`)
+        .then(response => response.json())
+        .then(comentarios => mostrarComentarios(comentarios))
+        .catch(error => console.error('Error al recargar comentarios:', error));
+    }, 1000);
+  });
+}
