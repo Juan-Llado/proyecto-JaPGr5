@@ -32,6 +32,10 @@ let contadorCarrito=document.getElementById("contadorCarrito");
       
       restaurarIconosCarrito();
       
+      // Mostrar productos relacionados
+      if (producto.relatedProducts && producto.relatedProducts.length > 0) {
+        mostrarProductosRelacionados(producto.relatedProducts);
+      }
   
       fetch(`https://japceibal.github.io/emercado-api/products_comments/${productoID}.json`)
   .then(response => {
@@ -82,6 +86,50 @@ window.cargarImagenes=function cargarImagenes(imagenes){
         }
     
     });
+}
+
+
+// Mostrar productos relacionados
+function mostrarProductosRelacionados(productosRelacionados) {
+  const contenedorRelacionados = document.getElementById("productos-relacionados");
+  
+  // Limpiar contenido previo
+  contenedorRelacionados.innerHTML = "";
+  
+  // Crear título de la seccion
+  const titulo = document.createElement("h3");
+  titulo.textContent = "Productos Relacionados";
+  titulo.className = "titulo-relacionados";
+  contenedorRelacionados.appendChild(titulo);
+  
+  // Crear contenedor para las tarjetass
+  const gridRelacionados = document.createElement("div");
+  gridRelacionados.className = "grid-relacionados";
+  
+  // Crear una tarjeta por cada producto relacionado
+  productosRelacionados.forEach(producto => {
+    const tarjeta = document.createElement("div");
+    tarjeta.className = "tarjeta-relacionado";
+    tarjeta.style.cursor = "pointer";
+    
+    tarjeta.innerHTML = `
+      <img src="${producto.image}" 
+           alt="${producto.name}" 
+           class="img-relacionado"
+           onerror="this.src='img/no-image.jpg'">
+      <h5 class="nombre-relacionado">${producto.name}</h5>
+    `;
+    
+    // Agregar evento click para redirigir al producto
+    tarjeta.addEventListener("click", () => {
+      localStorage.setItem("id", producto.id);
+      window.location.href = "product-info.html";
+    });
+    
+    gridRelacionados.appendChild(tarjeta);
+  });
+  
+  contenedorRelacionados.appendChild(gridRelacionados);
 }
 
 
