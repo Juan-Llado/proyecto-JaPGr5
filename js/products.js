@@ -303,3 +303,5 @@ if (!catID) {
   // Iniciar la carga de la categoría
   cargarCategoria(catID);
 });
+
+
