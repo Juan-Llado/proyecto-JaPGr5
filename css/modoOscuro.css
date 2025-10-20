@@ -1,0 +1,72 @@
+
+
+.icono{
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.contenedorModoOscuro{
+    margin-right: 20px;
+    width: 65px;
+    height: 35px;
+    background-color: white;
+    padding: 2px 3px;
+    border-radius: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btnModoOscuro{
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 25px;
+    cursor:pointer;
+    position: relative;
+    padding: 5px;
+}
+
+.slider{
+    position: absolute;
+    background-color: darkgreen;
+    width: 30px;
+    height: 30px;
+    border-radius: 200px;
+    left: 0;
+    transition: all 0.4s ease-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+input[type="checkbox"]{
+    position:absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.modoOscuro .slider{
+    left: 28px;
+}
+
+body.modoOscuro {
+  background: none !important;
+  background-color: #212529 !important;
+  color: white !important;
+}
+
+.modoOscuro .list-group-item,
+.modoOscuro .card,
+.modoOscuro .album{
+    background-color: #212529 !important;
+    color: white;
+}
+
