@@ -12,6 +12,12 @@ let editarImg=document.getElementById("imgEditarPerfil");
 let perfiles=document.getElementById("contenedorOpciones");
 let ids=["op1","op2","op3","op4"];
 
+window.addEventListener('DOMContentLoaded', () => {
+  let imagenGuardada = localStorage.getItem('imagenSeleccionada');
+  if (imagenGuardada) {
+    imgPerfil.src = imagenGuardada;
+  }
+});
 
 btnEditar.addEventListener("click", function () {
   for (let i = 0; i < datosPerfil.length; i++) {
@@ -39,7 +45,7 @@ btnGuardar.addEventListener("click", function () {
 
 editarImg.addEventListener("click",function(){
     cambiarFotoPerfil();
-    imgPerfil.src=localStorage.getItem('imagenSeleccionada');
+    
 })
 
 
@@ -60,29 +66,10 @@ function cambiarFotoPerfil(){
             localStorage.setItem("imagenSeleccionada", imagenSrc);
             perfiles.style.display="none";
             contenedorDatos.style.removeProperty("display");
+            imgPerfil.src=localStorage.getItem('imagenSeleccionada');
             imgPerfil.style.display="flex";
             editarImg.style.display="none";
         });
 });
 
 }
-document.addEventListener("DOMContentLoaded", () => {
- 
-  const savedImage = localStorage.getItem("profileImage");
-  if (savedImage) {
-    document.getElementById("profileImage").src = savedImage;
-  }
-  document.getElementById("profileImageInput").addEventListener("change", function () {
-    const file = this.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const imageData = e.target.result;
-        localStorage.setItem("profileImage", imageData);
-        document.getElementById("profileImage").src = imageData;
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-});
-
