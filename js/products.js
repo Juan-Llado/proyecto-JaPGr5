@@ -157,7 +157,6 @@ if (!catID) {
       botonDetalles.addEventListener("click", function() {  
         localStorage.setItem("id", producto.id); 
         window.location.href="product-info.html"; 
-        console.log("Producto ID guardado:", producto.id);
       })
       productosContainer.appendChild(productoDiv);
     });
@@ -304,3 +303,5 @@ if (!catID) {
   // Iniciar la carga de la categoría
   cargarCategoria(catID);
 });
+
+

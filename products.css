@@ -30,6 +30,7 @@
     line-height: 1.6;
     padding-bottom: 2rem;
     position: relative;
+    padding: 0;
   }
 
   body::before {
@@ -47,7 +48,7 @@
   /* Navegación */
   .inicio nav {
     background: linear-gradient(135deg, var(--dark-green) 0%, var(--primary-green) 100%);
-    padding: 12px 20px;
+    padding: 12px 10px;
     box-shadow: var(--shadow);
     margin: 15px auto;
     width: 95%;
@@ -520,3 +521,27 @@
   border-radius: 5px;
   font-weight: bold;
 }
+
+
+/*Aplicado el modo oscuro*/
+
+
+.modoOscuro h2{
+    color: white !important;
+}
+
+.modoOscuro .card{
+    background-color: gray;
+}
+
+.modoOscuro #clear-filter{ 
+    background-color: #182730;
+    border-color: #108fa5;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;;
+}
+.modoOscuro #clear-filter:hover{
+    background-color: #0d6efd;
+}
+
