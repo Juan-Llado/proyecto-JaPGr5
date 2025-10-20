@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <link href="css/styles.css" rel="stylesheet">
+  <link href="css/my-profile.css" rel="stylesheet">
   <style>
     .bd-placeholder-img {
       font-size: 1.125rem;
@@ -51,12 +52,39 @@
     </div>
   </nav>
   <main>
-    <div class="container">
-      <div class="alert alert-danger text-center" role="alert">
-        <h4 class="alert-heading">Funcionalidad en desarrollo</h4>
+    <div class="container" id="contenedorPerfil">
+      <div id="contenedorImg">
+        <img src="img/perfil.jpg" alt="foto de perfil" id="imgPerfil">
+        <img src="img/editarFoto.png" alt="editar perfil" id="imgEditarPerfil">
       </div>
+      <form id="formPerfil">
+        <label>Nombre:</label>
+        <input class="datosPerfil" type="text" id="nombre" readonly>
+        <label>Apellido:</label>
+        <input class="datosPerfil" type="text" id="apellido" readonly>
+        <label>Email:</label>
+        <input class="datosPerfil" type="text" id="email" readonly>
+        <label>Teléfono de contacto:</label>
+        <input class="datosPerfil" type="text" id="telefono" readonly>
+      </form>
+      <button id="btnEditar">Editar</button>
+      <button id="btnGuardar">Guardar</button>
+    </div>
+    <div id="contenedorOpciones">
+      <h5>Seleccionar foto de perfil</h5>
+       <div id="imagenesPerfiles">
+      <!--Perfiles-->
+        <img src="img/perfiles/perfil1.jpg" alt="foto de perfil" class="opcionPerfil" id="op1">
+        <img src="img/perfiles/perfil2.jpg" alt="foto de perfil" class="opcionPerfil" id="op2">
+        <img src="img/perfiles/perfil3.jpg" alt="foto de perfil" class="opcionPerfil" id="op3">
+        <img src="img/perfiles/perfil4.jpg" alt="foto de perfil" class="opcionPerfil" id="op4">
+    </div>
+    </div>
+   
+        
     </div>
   </main>
+  
   <footer class="text-muted">
     <div class="container">
       <p class="float-end">
@@ -65,10 +93,6 @@
       <p>Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jovenes a Programar</a></p>
     </div>
   </footer>
-
-      <div>
-      <button type="button" onclick="cerrarSesion()">cerrar sesión</buttton>
-      </div>
 
          <script> 
     if (!localStorage.getItem("loggedIn")) {
@@ -90,6 +114,8 @@ function cerrarSesion() {
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/init.js"></script>
   <script src="js/my-profile.js"></script>
+  <script src="js/my-profile.js"></script>
+  
 </body>
 
 </html>

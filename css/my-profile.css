@@ -1,0 +1,84 @@
+
+main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+}
+
+footer {
+    padding: 10px 0;
+    margin-top: 100px;
+  }
+
+  #contenedorPerfil{
+    width: 400px;
+    height: 500px;
+    border: 2px solid green;
+}
+
+#contenedorImg{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+
+#formPerfil{
+    display: grid;
+    grid-column: auto;
+    justify-content: center;
+    padding: 20px;
+}
+
+#imgPerfil{
+    width:110px;
+    border-radius: 50%;
+    border: 2px solid black;
+}
+
+.datosPerfil{
+    border: none;
+}
+
+#btnEditar, #btnGuardar{
+    margin: 10px;
+    color: white;
+    background-color: darkgreen;
+    border-radius: 10px;
+    border: none;
+    padding: 10px;
+}
+
+#imgEditarPerfil{
+    width:110px;
+    border-radius: 50%;
+    opacity: 0.5;
+}
+
+
+#btnGuardar,#imgEditarPerfil{
+    display: none;
+}
+
+#contenedorOpciones{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 600px;
+    height: 200px;
+    background-color: grey;
+    border: 2x solid black;
+    border-radius: 25px;
+}
+
+
+.opcionPerfil{
+    width:110px;
+    border-radius: 50%;
+    margin: 10px;
+    cursor: pointer;
+}
