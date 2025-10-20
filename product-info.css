@@ -39,32 +39,17 @@ html, body {      /*Deja el footer al final de la pagina*/
     font-weight: 600;
 }
 
-#contDer{
-  justify-content: end !important;
-  margin-left: 0px;
-  margin-right: 10%;
-}
-
-#divperfil{
-  justify-content: center;
-}
-
-#eMercado{
- margin-left: 10%;
-}
-
 #perfil{
   width: 40px;
   height: 40px;
   object-fit: cover;
   border-radius: 50%;
-  margin-left: 25px;
 }
 
 #carritoNav{    /*los iconos de Boostrap se tratan como texto*/
   font-size: 30px;
   color: white;
-  right: 0px;
+  margin-right: 25px;
 }
 
 #contadorCarrito{
@@ -111,9 +96,10 @@ html, body {      /*Deja el footer al final de la pagina*/
 
 #contenedor{
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  margin-top: 7%;
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 
@@ -174,8 +160,6 @@ html, body {      /*Deja el footer al final de la pagina*/
   box-shadow: none;
   border: none;
 }
-
-
 
 /*CARRUSEL*/
 
