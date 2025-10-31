@@ -150,6 +150,7 @@ function badgeCarrito(){    //se muestra sobre el carrito en la barra superior s
   }
 }
 
+
 document.addEventListener('DOMContentLoaded', () => {
   badgeCarrito();
 })
