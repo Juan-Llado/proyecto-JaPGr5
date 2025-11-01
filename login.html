@@ -85,7 +85,7 @@
     <!-- Texto -->
     <div class="row">
       <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-        <h5 class="text-uppercase">integrantes</h5>
+        <h5 class="text-uppercase">Integrantes</h5>
 <p> Luciano Rodriguez -  integrante 2 - integrante 3 - integrante 4 - integrante 5 </P>
 
       </div>
@@ -117,35 +117,7 @@
 
 
 
-    <script src="js/scriptLOGIN.js"></script>
-
-    <script>
-// constantes para el evento
-const loginForm = document.getElementById("loginForm");
-const userInput = document.getElementById("user");   // es el id del input del correo
-const passInput = document.getElementById("pass");   // es el id de la contraseña
-
-// Evento submit del login
-loginForm.addEventListener("submit", function(e){
-  e.preventDefault(); // evita que recargue la página
-
-  let usuario = userInput.value;
-  let password = passInput.value;
-
-  if(usuario && password){
-    // Guardar usuario en localStorage
-    localStorage.setItem("usuario", usuario);
-
-    // Guardar flag de sesión
-    localStorage.setItem("loggedIn", true);
-
-    // Redirigir a index.html
-    window.location.href = "index.html";
-  }
-});
-
-</script>
-
+<script src="js/login.js"></script>
      <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
