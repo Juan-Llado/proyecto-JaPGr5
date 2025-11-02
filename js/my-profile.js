@@ -14,11 +14,14 @@ let ids=["op1","op2","op3","op4"];
 
 window.addEventListener('DOMContentLoaded', () => {
   let imagenGuardada = localStorage.getItem('imagenSeleccionada');
-  let emailGuardado = localStorage.getItem('usuario');
   if (imagenGuardada) {
     imgPerfil.src = imagenGuardada;
   }
-   email.value=emailGuardado;
+  nombre.value=localStorage.getItem('nombre');
+  email.value=localStorage.getItem('usuario');
+  apellido.value=localStorage.getItem('apellido');
+  telefono.value=localStorage.getItem('telefono');
+
 });
 
 btnEditar.addEventListener("click", function () {
@@ -54,7 +57,6 @@ editarImg.addEventListener("click",function(){
 function guardarDatos(){
     localStorage.setItem('nombre',nombre.value);
     localStorage.setItem('apellido',apellido.value);
-    localStorage.setItem('email',email.value);
     localStorage.setItem('telefono',telefono.value);
 }
 
@@ -80,6 +82,9 @@ function cambiarFotoPerfil(){
 function cerrarSesion() {
     localStorage.removeItem('usuario');
     localStorage.removeItem('loggedIn');
+    localStorage.removeItem('telefono');
+    localStorage.removeItem('nombre');
+    localStorage.removeItem('apellido');
      window.location.href = 'login.html';
 }
 

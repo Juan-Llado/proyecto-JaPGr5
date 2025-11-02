@@ -24,7 +24,7 @@ footer {
     height: 500px;
     border: 2px solid green;
     border-radius: 30px;
-     background-color: white;
+    background-color: white;
     
 }
 
@@ -40,10 +40,11 @@ footer {
 
 #formPerfil{
     display: grid;
-    grid-column: auto;
-    justify-content: center;
+    grid-template-columns: 1fr 2fr; /* label e input */
+    gap: 10px 5px; /* espacio entre filas y columnas */
+    align-items: center;
     padding: 20px;
-    color: rgb(0, 0, 0);
+    color: black;
     background-color: white;
 }
 
