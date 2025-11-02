@@ -16,6 +16,27 @@ localStorage.setItem("carrito", JSON.stringify(carrito));
     return;
   }
 
+    function actualizarContadorCarrito() {
+    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    let totalProductos = 0;
+    
+    carrito.forEach(producto => {
+      totalProductos += producto.quantity || 1;
+    });
+    
+    const badge = document.getElementById("contadorCarrito");
+    if (badge) {
+      badge.textContent = totalProductos;
+      if (totalProductos === 0) {
+        badge.style.display = "none";
+      } else {
+        badge.style.display = "inline";
+      }
+    }
+  }
+
+  actualizarContadorCarrito();
+
   carrito.forEach((producto, index) => {
     const itemHTML = `
       <div class="card mb-3">
@@ -52,6 +73,8 @@ localStorage.setItem("carrito", JSON.stringify(carrito));
         const subtotalElement = e.target.closest(".card-body").querySelector(".subtotal");
         subtotalElement.textContent = `Subtotal: ${producto.currency} ${producto.cost * nuevaCantidad}`;
         actualizarTotal();
+
+        actualizarContadorCarrito();
       }
     });
   });
