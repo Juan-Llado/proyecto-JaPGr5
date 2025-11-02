@@ -70,3 +70,6 @@ body.modoOscuro {
     color: white;
 }
 
+.modoOscuro #contenedorPerfil,.modoOscuro #contenedorImg,.modoOscuro #formPerfil{
+    background-color: grey;
+}

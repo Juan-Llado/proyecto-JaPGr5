@@ -6,9 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>eMercado - Todo lo que busques está aquí</title>
   <link href="https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <link href="css/styles.css" rel="stylesheet">
   <link href="css/my-profile.css" rel="stylesheet">
+    <link href="css/modoOscuro.css" rel="stylesheet">
   <style>
     .bd-placeholder-img {
       font-size: 1.125rem;
@@ -29,6 +31,15 @@
 
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-1">
+    <div class="container">   <!--Botón modo oscuro-->
+      <div class="contenedorModoOscuro">
+       <label class="btnModoOscuro">
+          <input type="checkbox" id="check">
+          <span class="slider">
+            <i class="bi bi-brightness-high-fill icono"></i>
+          </span>
+        </label> 
+      </div>
     <div class="container">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,6 +57,7 @@
             <a class="nav-link" href="sell.html">Vender</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="#" onclick="cerrarSesion()">Cerrar sesión</a>
           </li>
         </ul>
       </div>
@@ -95,28 +107,11 @@
     </div>
   </footer>
 
-         <script> 
-    if (!localStorage.getItem("loggedIn")) {
-      // Si no hay sesión iniciada, redirigir a login.html
-       alert("⚠️ Debes iniciar sesión para acceder a esta página");
-      window.location.href = "login.html";
-
-    }
-  </script> 
-
-
-      <script>
-function cerrarSesion() {
-    localStorage.removeItem('usuario');
-    localStorage.removeItem('loggedIn');
-     window.location.href = 'login.html';
-}
-</script>
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/init.js"></script>
   <script src="js/my-profile.js"></script>
   <script src="js/my-profile.js"></script>
-  
+  <script src="js/modoOscuro.js"></script>
 </body>
 
 </html>

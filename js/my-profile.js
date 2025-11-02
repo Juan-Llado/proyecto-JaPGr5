@@ -14,9 +14,11 @@ let ids=["op1","op2","op3","op4"];
 
 window.addEventListener('DOMContentLoaded', () => {
   let imagenGuardada = localStorage.getItem('imagenSeleccionada');
+  let emailGuardado = localStorage.getItem('usuario');
   if (imagenGuardada) {
     imgPerfil.src = imagenGuardada;
   }
+   email.value=emailGuardado;
 });
 
 btnEditar.addEventListener("click", function () {
@@ -24,9 +26,9 @@ btnEditar.addEventListener("click", function () {
     datosPerfil[i].readOnly = false;
     datosPerfil[i].style.border = "2px solid #4CAF50";
   }
-    btnEditar.style.display="none";
+    btnEditar.style.display="none";     //oculta el botón editar y aparece el guardar
     btnGuardar.style.display="flex";
-    imgPerfil.style.display="none";
+    imgPerfil.style.display="none";   //se oculta la foto de perfil y aparece una con un lapiz que indica que se puede editar
     editarImg.style.display="flex";
 });
 
@@ -72,4 +74,17 @@ function cambiarFotoPerfil(){
         });
 });
 
+}
+
+
+function cerrarSesion() {
+    localStorage.removeItem('usuario');
+    localStorage.removeItem('loggedIn');
+     window.location.href = 'login.html';
+}
+
+if (!localStorage.getItem("loggedIn")) {
+      // Si no hay sesión iniciada, redirigir a login.html
+       alert("⚠️ Debes iniciar sesión para acceder a esta página");
+      window.location.href = "login.html";
 }
