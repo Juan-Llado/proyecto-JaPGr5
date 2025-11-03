@@ -3,6 +3,9 @@ let productoID=localStorage.getItem("id");
 let info=document.getElementById("info")
 let carrusel=document.getElementById("contImg");
 let divPrincipal=document.getElementById("columna1");
+let contadorCarrito=document.getElementById("contadorCarrito");
+let iconoCarrito=document.getElementById("carritoNav");
+let desplegableCarrito=document.getElementById("desplegableCarrito");
 let estrellas=document.querySelectorAll(".estrella");
 let btnEnviarComentario=document.getElementById("btnEnviarComentario");
 
@@ -134,26 +137,24 @@ function mostrarProductosRelacionados(productosRelacionados) {
   contenedorRelacionados.appendChild(gridRelacionados);
 }
 
-window.prodCarrito = JSON.parse(localStorage.getItem("carrito")) || [];
+let contador = parseInt(localStorage.getItem('carritoContador')) || 0; //busco la variable contador en localStorage, si no esta la crea con valor 0.
 
-function carrito(producto) {
-   
-  let btn = document.getElementById("agregarCarrito");
-  let indice = prodCarrito.findIndex(p => p.id === producto.id);
-
-  if (indice !== -1) {
-    prodCarrito.splice(indice, 1);
-    btn.className = "btn bi bi-cart-plus"; 
-  } else {
-    prodCarrito.push(producto);
-    btn.className = "btn bi bi-cart-check-fill";
-  }
-
-  localStorage.setItem("carrito", JSON.stringify(prodCarrito));
-  actualizarContadorCarrito(); // Esta función ya está en init.js y se actualiza automáticamente
+function badgeCarrito(){    //se muestra sobre el carrito en la barra superior si hay productos agregados. 
+  if (contador!=0){
+    contadorCarrito.style.display="inline-block";
+    contadorCarrito.innerHTML=contador;
+  }else{
+    contadorCarrito.style.display = "none";
+    contadorCarrito.innerText = "";
 }
+}
+document.addEventListener('DOMContentLoaded', () => {
+  badgeCarrito();
+})
 
-
+document.addEventListener('DOMContentLoaded', () => {
+  badgeCarrito();
+})
 
 let clase="bi-cart-plus";
 
@@ -168,6 +169,7 @@ function carrito(producto) {
     prodCarrito.splice(indice, 1); //elimino el producto del array
     btn.className = "btn bi bi-cart-plus"; 
   } else {
+    producto.quantity = 1;
     prodCarrito.push(producto); //si no esta lo agrego al carrito
     btn.className = "btn bi bi-cart-check-fill";
   }
