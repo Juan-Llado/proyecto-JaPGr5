@@ -39,3 +39,30 @@ let getJSONData = function(url){
         return result;
     });
 }
+
+// Función para actualizar el contador del carrito en el badge
+function actualizarContadorCarrito() {
+  const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  let totalProductos = 0;
+  
+  // Sumar todas las cantidades de productos
+  carrito.forEach(producto => {
+    totalProductos += producto.quantity || 1;
+  });
+  
+  // Actualizar el badge
+  const badge = document.getElementById("contadorCarrito");
+  if (badge) {
+    badge.textContent = totalProductos;
+    
+    // Opcional: ocultar el badge si no hay productos
+    if (totalProductos === 0) {
+      badge.style.display = "none";
+    } else {
+      badge.style.display = "inline";
+    }
+  }
+}
+
+// Ejecutar al cargar la página
+document.addEventListener("DOMContentLoaded", actualizarContadorCarrito);

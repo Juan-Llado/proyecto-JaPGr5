@@ -138,7 +138,6 @@ function mostrarProductosRelacionados(productosRelacionados) {
   contenedorRelacionados.appendChild(gridRelacionados);
 }
 
-
 let contador = parseInt(localStorage.getItem('carritoContador')) || 0; //busco la variable contador en localStorage, si no esta la crea con valor 0.
 
 function badgeCarrito(){    //se muestra sobre el carrito en la barra superior si hay productos agregados. 
@@ -148,14 +147,15 @@ function badgeCarrito(){    //se muestra sobre el carrito en la barra superior s
   }else{
     contadorCarrito.style.display = "none";
     contadorCarrito.innerText = "";
-  }
 }
-
-
+}
 document.addEventListener('DOMContentLoaded', () => {
   badgeCarrito();
 })
 
+document.addEventListener('DOMContentLoaded', () => {
+  badgeCarrito();
+})
 
 let clase="bi-cart-plus";
 
@@ -170,6 +170,7 @@ function carrito(producto) {
     prodCarrito.splice(indice, 1); //elimino el producto del array
     btn.className = "btn bi bi-cart-plus"; 
   } else {
+    producto.quantity = 1;
     prodCarrito.push(producto); //si no esta lo agrego al carrito
     btn.className = "btn bi bi-cart-check-fill";
   }
