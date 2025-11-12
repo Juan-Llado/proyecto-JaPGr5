@@ -79,21 +79,10 @@ localStorage.setItem("carrito", JSON.stringify(carrito));
     });
   });
 
-  // sección de Total y botón Comprar
-  const totalHTML = `
-    <div class="card mt-4 bg-light">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
-          <h4 class="mb-0">Total:</h4>
-          <h3 class="mb-0 text-success" id="total-carrito">$0.00</h3>
-        </div>
-        <button class="btn btn-primary btn-lg w-100 mt-3" id="btn-comprar">
-          <i class="fa fa-shopping-cart"></i> Finalizar Compra
-        </button>
-      </div>
-    </div>
-  `;
-  cartContainer.insertAdjacentHTML("beforeend", totalHTML);
+  //div datos de envío
+  
+  
+ 
 
   // actualizar el total
   function actualizarTotal() {
