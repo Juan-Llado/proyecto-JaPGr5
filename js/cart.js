@@ -71,15 +71,59 @@ localStorage.setItem("carrito", JSON.stringify(carrito));
         localStorage.setItem("carrito", JSON.stringify(carrito));
 
         const subtotalElement = e.target.closest(".card-body").querySelector(".subtotal");
-        subtotalElement.textContent = `Subtotal: ${producto.currency} ${producto.cost * nuevaCantidad}`;
-        actualizarTotal();
+        subtotalElement.textContent = `Subtotal: ${producto.currency} ${(producto.cost * nuevaCantidad).toFixed(2)}`;
+        actualizarCostos();
 
         actualizarContadorCarrito();
       }
     });
   });
 
+  // Actualizar costos cuando cambia el tipo de envío
+  document.getElementById("tipoEnvio").addEventListener("change", () => {
+    actualizarCostos();
+  });
 
+function calcularSubtotal() {
+    let subtotal = 0;
+    let moneda = "";
+    
+    carrito.forEach(producto => {
+      subtotal += producto.cost * producto.quantity;
+      if (!moneda) moneda = producto.currency;
+    });
+    
+    return { subtotal, moneda };
+  }
+
+  // Función para obtener el porcentaje de envío según la opción seleccionada
+  function obtenerPorcentajeEnvio() {
+    const tipoEnvio = document.getElementById("tipoEnvio").value;
+    
+    switch(tipoEnvio) {
+      case "opcion1": // Premium 2 a 5 días (15%)
+        return 0.15;
+      case "opcion2": // Express 5 a 8 días (7%)
+        return 0.07;
+      case "opcion3": // Standard 12 a 15 días (5%)
+        return 0.05;
+      default:
+        return 0;
+    }
+  }
+
+  // Función para actualizar todos los costos
+  function actualizarCostos() {
+    const { subtotal, moneda } = calcularSubtotal();
+    const porcentajeEnvio = obtenerPorcentajeEnvio();
+    const costoEnvio = subtotal * porcentajeEnvio;
+    const total = subtotal + costoEnvio;
+
+    // Actualizar los elementos en el HTML
+    document.getElementById("valorSubtotal").textContent = `${moneda} ${subtotal.toFixed(2)}`;
+    document.getElementById("costoEnvio").textContent = `${moneda} ${costoEnvio.toFixed(2)}`;
+    document.getElementById("total-carrito").textContent = `${moneda} ${total.toFixed(2)}`;
+  }
 
 // sección de Total y botón Comprar
   document.getElementById("btn-comprar").addEventListener("click", () => {
@@ -148,20 +192,7 @@ formaPago=document.querySelector('input[name="pago"]:checked')
   alert(`¡Compra realizada con éxito!\nTotal: ${totalElement}\n\nGracias por tu compra.`);
 });
 
-  // actualizar el total
-  function actualizarTotal() {
-    let total = 0;
-    let moneda = "";
-    
-    carrito.forEach(producto => {
-      total += producto.cost * producto.quantity;
-      if (!moneda) moneda = producto.currency;
-    });
-    
-    document.getElementById("total-carrito").textContent = `${moneda} ${total.toFixed(2)}`;
-  }
-
-  // Calcular total inicial
-  actualizarTotal();
+ // Calcular costos iniciales
+  actualizarCostos();
   
 });
