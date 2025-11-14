@@ -158,6 +158,22 @@
     box-shadow: var(--shadow);
     transition: var(--transition);
   }
+  #btnPerfil{
+  border-radius: 50px;
+  margin: 0px;
+}
+
+#perfil{
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-left: 20px;
+}
+
+.dropdown-toggle::after {
+  display: none !important;
+}
 
   .profile-overlay {
     position: absolute;
@@ -499,13 +515,6 @@
     font-weight: 600;
 }
 
-.site-header .btn {
-    background: #ffffff !important;
-    color: #16142b !important;
-    border: 1px solid #ffffff !important;
-    font-weight: 700;
-    border-radius: 6px;
-}
 
 .site-header .btn:hover {
     background: #182730 !important;

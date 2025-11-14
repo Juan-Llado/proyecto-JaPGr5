@@ -9,7 +9,7 @@
     <title>Login</title>
 
     <link rel="stylesheet" href="css/stylesLOGIN.css">
-
+    <link rel="stylesheet" href="css/modoOscuro.css">
      <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -33,12 +33,18 @@
 
 <!-- navbar-->
 
-<navbar class="custom-darklightmode">
+<nav class="custom-darklightmode">
 <img  id="logo_principal" src="img/images/logo-jap-2022.svg" alt="logo principal">
- <button   class="button-icon" id="button-modebackground">
-        🔆 / 🌑
-      </button>
-</navbar>
+   <!--Botón modo oscuro-->
+      <div class="contenedorModoOscuro">
+       <label class="btnModoOscuro">
+          <input type="checkbox" id="check">
+          <span class="slider">
+            <i class="bi bi-brightness-high-fill icono"></i>
+          </span>
+        </label> 
+      </div>
+</nav>
 
 
 
@@ -51,24 +57,21 @@
             <p class="lexend-deca">iniciar sesión:</p>
 
             <!--input para ingresar correo-->
-            <p class="custom-p"  class="delius-regular">usuario:</P>
-            <input  id="user" class="customInput" class="delius-regular" type="text" minlength="6"
-                placeholder="Escribe tu nombre de usuario o correo electronico" required name="user">
-<p class="custom-p"  class="delius-regular">contraseña:</p>
+            <p class="custom-p"  class="delius-regular">Usuario:</P>
+            <input  id="user" class="customInput delius-regular" type="email"
+                placeholder="Ingresa tu correo electronico" required name="email">
+<p class="custom-p delius-regular">Contraseña:</p>
             <!--input para ingresar contraseña-->
-            <input class="customInput" type="password"id="pass" class="delius-regular" pattern="^(?=.*[0-9])(?=.*[!@#$%^&*]).{6,}$"  minlength="9" title="Debe tener al menos 9 caracteres, un número y un carácter especial" placeholder="Escribe tu contraseña"
+            <input class="customInput delius-regular" type="password" id="pass" pattern="^(?=.*[0-9])(?=.*[!@#$%^&*]).{6,}$"  minlength="9" title="Debe tener al menos 9 caracteres, un número y un carácter especial" placeholder="Escribe tu contraseña"
                 required name="password">
-
                <a class="link-olvido">¿Olvidaste tu contraseña?</a>
-
-
             <!--botton con sumbit para ingresar datos-->
             <button class="custom-submit-and-title" type="submit" class="delius-regular"> INGRESAR</button>
 
         </form>
 
         <!--boton para ingresar con google-->
-        <button type="button""delius-regular" class="google-btn"> <img id="logo-google"src="img/images/icons8-google.svg" alt="logo Google">
+        <button type="button delius-regular" class="google-btn"> <img id="logo-google"src="img/images/icons8-google.svg" alt="logo Google">
             <a href="index.html"></a>
         </button>
 
@@ -86,7 +89,7 @@
     <div class="row">
       <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
         <h5 class="text-uppercase">Integrantes</h5>
-<p> Luciano Rodriguez -  integrante 2 - integrante 3 - integrante 4 - integrante 5 </P>
+<p> Facundo Pereira - Fernanda Bonini - Juan José Lladó - Leticia Mangieri </p>
 
       </div>
 
@@ -116,7 +119,7 @@
 </footer>
 
 
-
+ <script src="js/modoOscuro.js"></script>
 <script src="js/login.js"></script>
      <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

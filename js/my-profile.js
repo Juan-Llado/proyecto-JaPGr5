@@ -61,7 +61,7 @@ function guardarDatos(){
 }
 
 function cambiarFotoPerfil(){
-    perfiles.style.display="flex";
+    perfiles.style.display="flex"; //foto de perfil elegida desde las opciones
     contenedorDatos.style.display="none";
     ids.forEach(function(id) {
         let imagenElegida = document.getElementById(id);
@@ -76,6 +76,27 @@ function cambiarFotoPerfil(){
         });
 });
 
+const inputFoto = document.getElementById("fotoSubida");  //Foto de perfil subida
+    inputFoto.addEventListener("change", (event) => {
+        const archivo = event.target.files[0];
+        if (archivo) {
+            const lector = new FileReader(); //para poder guardarla en localStorage
+            lector.onload = (e) => {
+                const imagenSrc = e.target.result;
+                // Guardar la imagen en localStorage
+                localStorage.setItem("imagenSeleccionada", imagenSrc);
+                // Actualizar la imagen
+                imgPerfil.src = imagenSrc;
+                imgPerfil.style.display = "flex";
+                editarImg.style.display = "none";
+                perfiles.style.display = "none";
+                contenedorDatos.style.removeProperty("display");
+            };
+            lector.readAsDataURL(archivo); // convierte la imagen en Base64
+        }
+
+
+})
 }
 
 

@@ -153,9 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
   badgeCarrito();
 })
 
-document.addEventListener('DOMContentLoaded', () => {
-  badgeCarrito();
-})
 
 let clase="bi-cart-plus";
 
