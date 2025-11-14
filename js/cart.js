@@ -80,6 +80,74 @@ localStorage.setItem("carrito", JSON.stringify(carrito));
   });
 
 
+
+// sección de Total y botón Comprar
+  document.getElementById("btn-comprar").addEventListener("click", () => {
+  // Validar dirección
+  const departamento = document.getElementById("departamento")?.value.trim();
+  const localidad = document.getElementById("localidad")?.value.trim();
+  const calle = document.getElementById("calle")?.value.trim();
+  const numero = document.getElementById("numero")?.value.trim();
+  const esquina = document.getElementById("esquina")?.value.trim();
+
+  if (!departamento || !localidad || !calle || !numero || !esquina) {
+    alert("Por favor completá todos los campos de dirección.");
+    return;
+  }
+
+  // Validar tipo de envío
+   const tipoEnvio = document.getElementById("tipoEnvio").value;
+  if (tipoEnvio === "") {
+    alert("Seleccioná un tipo de envío.");
+    return;
+  }
+  // Validar cantidades
+  const cantidades = document.querySelectorAll('.cantidad-input');
+  let cantidadesValidas = true;
+  cantidades.forEach(input => {
+    const valor = parseInt(input.value);
+    if (isNaN(valor) || valor <= 0) {
+      cantidadesValidas = false;
+    }
+  });
+  if (!cantidadesValidas) {
+    alert("La cantidad de cada producto debe ser mayor a 0.");
+    return;
+  }
+
+  // Validar forma de pago
+formaPago=document.querySelector('input[name="pago"]:checked')
+  if (!formaPago) {
+    alert("Seleccioná una forma de pago.");
+    return;
+  }
+
+  let pagoValido = false;
+  if (formaPago.value === "tarjeta") {
+    const numeroTarjeta = document.getElementById("numeroTarjeta")?.value.trim();
+    const vencimiento = document.getElementById("vencimiento")?.value.trim();
+    const codigo = document.getElementById("codigo")?.value.trim();
+    pagoValido = numeroTarjeta && vencimiento && codigo;
+  } else if (formaPago.value === "transferencia") {
+    const cuenta = document.getElementById("cuentaBancaria")?.value.trim();
+    pagoValido = cuenta;
+  } else if (formaPago.value === "efectivo") {
+  const nombreEfectivo = document.getElementById("nombreEfectivo")?.value.trim();
+  pagoValido = nombreEfectivo;
+  }
+
+
+ if (!pagoValido || pagoValido.length === 0) {
+  alert("Completá todos los campos de la forma de pago seleccionada.");
+  return;
+}
+
+
+  // Si todo está validado
+  const totalElement = document.getElementById("total-carrito").textContent;
+  alert(`¡Compra realizada con éxito!\nTotal: ${totalElement}\n\nGracias por tu compra.`);
+});
+
   // actualizar el total
   function actualizarTotal() {
     let total = 0;
@@ -95,11 +163,5 @@ localStorage.setItem("carrito", JSON.stringify(carrito));
 
   // Calcular total inicial
   actualizarTotal();
-
-  // Evento del botón Comprar
-  document.getElementById("btn-comprar").addEventListener("click", () => {
-    const totalElement = document.getElementById("total-carrito").textContent;
-    alert(`¡Compra realizada con éxito!\nTotal: ${totalElement}\n\nGracias por tu compra.`);
-  });
   
 });
