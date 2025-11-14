@@ -36,7 +36,7 @@
     <a class="navbar-brand" href="index.html">eMercado</a>
 
     <div class="dropdown ms-auto d-flex align-items-center">
-      <a class="nav-link position-relative me-4" href="cart.html">  
+      <a class="nav-link position-relative me-4" href="cart.html" id="miCarritoTexto">  
        <i class="bi bi-cart-fill"></i> Mi carrito
         <span class="badge bg-success rounded-pill" id="contadorCarrito">0</span>
       </a>
@@ -44,6 +44,7 @@
         <img src="img/img_perfil.png" alt="Perfil" id="perfil">
       </button> 
       <ul class="dropdown-menu dropdown-menu-end">
+      <li><a class="dropdown-item" href="my-profile.html">Ir a mi perfil</a></li>
         <li><button class="dropdown-item" type="button" onclick="logout()">Cerrar sesión</button></li>
       </ul>
     </div>
@@ -80,7 +81,7 @@
 </div>
 
 <div id="comentarios" class="mt-4"></div>
-
+</div>
   <footer class="text-muted">
     <div class="container">
       <p class="float-end mb-0">
@@ -89,14 +90,7 @@
       <p class="mb-0">Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jovenes a Programar</a></p>
     </div>
   </footer>
-  <div id="spinner-wrapper">
-    <div class="lds-ring">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-  </div>
+
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/init.js"></script>
   <script src="js/product-info.js"></script>

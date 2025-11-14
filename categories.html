@@ -40,7 +40,15 @@
             <a class="nav-link" href="sell.html">Vender</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="login.html">Ingresar</a>
           </li>
+          <li class="nav-item">
+    <a class="nav-link position-relative" href="cart.html">
+    <i class="bi bi-cart-fill"></i> Mi carrito
+    <span class="badge bg-success rounded-pill" id="contadorCarrito">0</span>
+  </a>
+</li>
+        
         </ul>
       </div>
     </div>
@@ -110,14 +118,8 @@
   <script src="js/init.js"></script>
   <script src="js/categories.js"></script>
   <script src="js/modoOscuro.js"></script>
-    <script> 
-    if (!localStorage.getItem("loggedIn")) {
-      // Si no hay sesión iniciada, redirigir a login.html
-       alert("⚠️ Debes iniciar sesión para acceder a esta página");
-      window.location.href = "login.html";
-
-    }
-  </script>
+  <script src="js/index.js"></script>
+   
 </body>
 
 </html>

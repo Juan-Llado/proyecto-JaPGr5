@@ -22,9 +22,7 @@ html, body {      /*Deja el footer al final de la pagina*/
       display: flex;
       flex-direction: column;
       background: linear-gradient(135deg, var(--dark-green) 0%, var(--primary-green) 100%);
-    }
-    #contenedor {
-      flex: 1;
+      min-height: 100vh;
     }
 
 
@@ -44,13 +42,13 @@ html, body {      /*Deja el footer al final de la pagina*/
   height: 40px;
   object-fit: cover;
   border-radius: 50%;
+  margin-left: 20px;
 }
 
-#carritoNav{    /*los iconos de Boostrap se tratan como texto*/
-  font-size: 30px;
+#miCarritoTexto{
   color: white;
-  margin-right: 25px;
 }
+
 
 #contadorCarrito{
   position: absolute;
@@ -66,6 +64,9 @@ html, body {      /*Deja el footer al final de la pagina*/
 #btnPerfil{
   border-radius: 50px;
   margin: 0px;
+}
+.dropdown-toggle::after {
+  display: none !important;
 }
 
 /* Footer */
@@ -96,6 +97,7 @@ html, body {      /*Deja el footer al final de la pagina*/
 
 #contenedor{
   display: flex;
+  flex: 1;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;

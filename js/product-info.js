@@ -8,6 +8,7 @@ let iconoCarrito=document.getElementById("carritoNav");
 let desplegableCarrito=document.getElementById("desplegableCarrito");
 let estrellas=document.querySelectorAll(".estrella");
 let btnEnviarComentario=document.getElementById("btnEnviarComentario");
+let fotoPerfil=document.getElementById("perfil");
 
 
     fetch(`https://japceibal.github.io/emercado-api/products/${productoID}.json`)
@@ -152,9 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
   badgeCarrito();
 })
 
-document.addEventListener('DOMContentLoaded', () => {
-  badgeCarrito();
-})
 
 let clase="bi-cart-plus";
 
@@ -200,6 +198,9 @@ function restaurarIconosCarrito() {
     window.location.href = 'index.html';
   };
 
+
+//foto de perfil
+fotoPerfil.src=localStorage.getItem('imagenSeleccionada')
 
   function mostrarComentarios(comentarios) {
   const contenedorComentarios = document.getElementById("comentarios");

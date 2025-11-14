@@ -1,0 +1,58 @@
+h2{
+    color:#1b5e20 !important;
+  font-weight: bold !important;
+  font-family: 'Raleway', sans-serif  !important;
+  font-size: 25px;
+  margin:15px;
+  margin-bottom: 40px;
+}
+
+#contenedorEnvios{
+    border: 2px solid;
+    border-color: #1b5e20;
+    padding: 15px;
+}
+
+#envioTabsContent label,
+#datos-tab,#pagos-tab,
+#cart-container .card-body h5,
+#divCostos label{
+  color:#1b5e20 !important;
+  font-weight: bold !important;
+  font-family: 'Raleway', sans-serif  !important;
+}
+
+#envioTabsContent label{
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+#datos-tab,#pagos-tab,#divCostos label{
+    font-size: 20px !important;
+}
+
+#btn-comprar{
+    background-color: #1b5e20;
+    color: white;
+}
+
+input,select,#divCostos{
+    font-family: 'Raleway', sans-serif  !important;
+    margin: 5px !important;
+}
+
+#cart-container .card-body{
+    font-family: 'Raleway', sans-serif  !important;
+}
+
+#total,#total-carrito{
+    font-weight: bold !important;
+    font-size: 20px;
+}
+
+#divCostos{
+    margin-top: 20px !important;
+    border-top: 2px solid !important;
+    border-color: #1b5e20;
+    padding: 15px;
+}

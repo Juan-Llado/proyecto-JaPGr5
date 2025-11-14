@@ -14,11 +14,14 @@ let ids=["op1","op2","op3","op4"];
 
 window.addEventListener('DOMContentLoaded', () => {
   let imagenGuardada = localStorage.getItem('imagenSeleccionada');
-  let emailGuardado = localStorage.getItem('usuario');
   if (imagenGuardada) {
     imgPerfil.src = imagenGuardada;
   }
-   email.value=emailGuardado;
+  nombre.value=localStorage.getItem('nombre');
+  email.value=localStorage.getItem('usuario');
+  apellido.value=localStorage.getItem('apellido');
+  telefono.value=localStorage.getItem('telefono');
+
 });
 
 btnEditar.addEventListener("click", function () {
@@ -54,12 +57,11 @@ editarImg.addEventListener("click",function(){
 function guardarDatos(){
     localStorage.setItem('nombre',nombre.value);
     localStorage.setItem('apellido',apellido.value);
-    localStorage.setItem('email',email.value);
     localStorage.setItem('telefono',telefono.value);
 }
 
 function cambiarFotoPerfil(){
-    perfiles.style.display="flex";
+    perfiles.style.display="flex"; //foto de perfil elegida desde las opciones
     contenedorDatos.style.display="none";
     ids.forEach(function(id) {
         let imagenElegida = document.getElementById(id);
@@ -74,12 +76,36 @@ function cambiarFotoPerfil(){
         });
 });
 
+const inputFoto = document.getElementById("fotoSubida");  //Foto de perfil subida
+    inputFoto.addEventListener("change", (event) => {
+        const archivo = event.target.files[0];
+        if (archivo) {
+            const lector = new FileReader(); //para poder guardarla en localStorage
+            lector.onload = (e) => {
+                const imagenSrc = e.target.result;
+                // Guardar la imagen en localStorage
+                localStorage.setItem("imagenSeleccionada", imagenSrc);
+                // Actualizar la imagen
+                imgPerfil.src = imagenSrc;
+                imgPerfil.style.display = "flex";
+                editarImg.style.display = "none";
+                perfiles.style.display = "none";
+                contenedorDatos.style.removeProperty("display");
+            };
+            lector.readAsDataURL(archivo); // convierte la imagen en Base64
+        }
+
+
+})
 }
 
 
 function cerrarSesion() {
     localStorage.removeItem('usuario');
     localStorage.removeItem('loggedIn');
+    localStorage.removeItem('telefono');
+    localStorage.removeItem('nombre');
+    localStorage.removeItem('apellido');
      window.location.href = 'login.html';
 }
 

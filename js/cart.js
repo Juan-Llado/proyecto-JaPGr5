@@ -79,6 +79,22 @@ localStorage.setItem("carrito", JSON.stringify(carrito));
     });
   });
 
+  //div datos de envío
+  
+  
+ 
+
+  // actualizar el total
+  function actualizarTotal() {
+    let total = 0;
+    let moneda = "";
+    
+    carrito.forEach(producto => {
+      total += producto.cost * producto.quantity;
+      if (!moneda) moneda = producto.currency;
+    });
+    
+    document.getElementById("total-carrito").textContent = `${moneda} ${total.toFixed(2)}`;
   // sección de Total y botón Comprar
   document.getElementById("btn-comprar").addEventListener("click", () => {
   // Validar dirección
