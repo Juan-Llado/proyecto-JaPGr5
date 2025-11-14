@@ -79,10 +79,6 @@ localStorage.setItem("carrito", JSON.stringify(carrito));
     });
   });
 
-  //div datos de envío
-  
-  
- 
 
   // actualizar el total
   function actualizarTotal() {
