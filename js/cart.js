@@ -39,23 +39,26 @@ localStorage.setItem("carrito", JSON.stringify(carrito));
 
   carrito.forEach((producto, index) => {
     const itemHTML = `
-      <div class="card mb-3">
-        <div class="row g-0">
-          <div class="col-md-4">
-            <img src="${producto.images[0]}" class="img-fluid rounded-start" alt="${producto.name}">
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h5 class="card-title">${producto.name}</h5>
-              <p class="card-text">Precio: ${producto.currency} ${producto.cost}</p>
-              <label for="cantidad-${index}">Cantidad:</label>
-              <input type="number" id="cantidad-${index}" class="form-control cantidad-input" min="1" value="${producto.quantity || 1}" data-index="${index}">
-               <p class="subtotal mt-2">Subtotal: ${producto.currency} ${(producto.cost * producto.quantity).toFixed(2)}</p>
-           
-          </div>
+  <div class="card mb-3" id="producto-${index}">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src="${producto.images[0]}" class="img-fluid rounded-start" alt="${producto.name}">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">${producto.name}</h5>
+          <p class="card-text">Precio: ${producto.currency} ${producto.cost}</p>
+          <label for="cantidad-${index}">Cantidad:</label>
+          <input type="number" id="cantidad-${index}" class="form-control cantidad-input" min="1" value="${producto.quantity || 1}" data-index="${index}">
+          <p class="subtotal mt-2">Subtotal: ${producto.currency} ${(producto.cost * producto.quantity).toFixed(2)}</p>
+          <button class="btn btn-danger btn-eliminar mt-2" data-index="${index}">
+            <i class="fas fa-trash"></i> Eliminar
+          </button>
         </div>
       </div>
-    `;
+    </div>
+  </div>
+`;
     cartContainer.insertAdjacentHTML("beforeend", itemHTML);
   });
 
@@ -78,6 +81,33 @@ localStorage.setItem("carrito", JSON.stringify(carrito));
       }
     });
   });
+  // Eliminar producto del carrito
+document.querySelectorAll(".btn-eliminar").forEach(button => {
+  button.addEventListener("click", (e) => {
+    const index = parseInt(e.target.closest("button").dataset.index);
+    
+    // Eliminar del array
+    carrito.splice(index, 1);
+    
+    // Actualizar localStorage
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+    
+    // Eliminar visualmente el producto
+    document.getElementById(`producto-${index}`).remove();
+    
+    // Actualizar contador del badge
+    actualizarContadorCarrito();
+    
+    // Actualizar costos totales
+    actualizarCostos();
+    
+    // Si el carrito queda vacío, mostrar mensaje
+    if (carrito.length === 0) {
+      cartContainer.innerHTML = "";
+      emptyMessage.classList.remove("d-none");
+    }
+  });
+});
 
   // Actualizar costos cuando cambia el tipo de envío
   document.getElementById("tipoEnvio").addEventListener("change", () => {
