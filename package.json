@@ -1,0 +1,27 @@
+{
+  "name": "proyecto-japgr5",
+  "version": "1.0.0",
+  "description": "Servidor",
+  "main": "app.js",
+ "scripts": {
+  "start": "node app.js",
+  "test": "echo \"Error: no test specified\" && exit 1"
+}
+,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Juan-Llado/proyecto-JaPGr5.git"
+  },
+  "author": "Jap2025 Grupo 4",
+  "license": "ISC",
+  
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+
+
+  "bugs": {
+    "url": "https://github.com/Juan-Llado/proyecto-JaPGr5/issues"
+  },
+  "homepage": "https://github.com/Juan-Llado/proyecto-JaPGr5#readme"
+}
