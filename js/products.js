@@ -241,7 +241,7 @@ if (!catID) {
     `;
 
     // Hacer la solicitud a la API
-    fetch(`https://japceibal.github.io/emercado-api/cats_products/${catID}.json`)
+    fetch(`http://localhost:3000/api/categorias/${catID}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('No se pudo cargar la categoría');
