@@ -11,14 +11,41 @@ loginForm.addEventListener("submit", function(e){
   let usuario = userInput.value;
   let password = passInput.value;
 
-  if(usuario && password){
-    // Guardar usuario en localStorage
-    localStorage.setItem("usuario", usuario);
+if(usuario && password){
+    // Hacer petición POST al backend
+    fetch("http://localhost:3000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ usuario, password })
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Error en el login");
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.token) {
+        // Guardar el token en localStorage
+        localStorage.setItem("token", data.token);
+        
+        // Guardar usuario en localStorage
+        localStorage.setItem("usuario", usuario);
 
-    // Guardar flag de sesión
-    localStorage.setItem("loggedIn", true);
+        // Guardar flag de sesión
+        localStorage.setItem("loggedIn", true);
 
-    // Redirigir a index.html
-    window.location.href = "index.html";
+        // Redirigir a index.html
+        window.location.href = "index.html";
+      } else {
+        alert("No se recibió el token del servidor");
+      }
+    })
+    .catch(error => {
+      console.error("Error en login:", error);
+      alert("Error al iniciar sesión. Por favor, verifica tus credenciales.");
+    });
   }
 });

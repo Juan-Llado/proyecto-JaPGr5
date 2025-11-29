@@ -18,11 +18,30 @@ let hideSpinner = function(){
 let getJSONData = function(url){
     let result = {};
     showSpinner();
-    return fetch(url)
+    
+    // Obtener el token del localStorage
+    const token = localStorage.getItem("token");
+    
+    // Crear headers con el token
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+    
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    return fetch(url, { headers })
     .then(response => {
       if (response.ok) {
         return response.json();
-      }else{
+      } else if (response.status === 401 || response.status === 403) {
+        // Si el token es inválido o no hay token, redirigir al login
+        alert("Sesión expirada. Por favor, inicia sesión nuevamente.");
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+        throw Error("No autorizado");
+      } else {
         throw Error(response.statusText);
       }
     })

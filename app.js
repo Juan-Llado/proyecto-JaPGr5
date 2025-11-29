@@ -8,14 +8,28 @@ const app = express();
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
-
-
-
-
-
-
-
 const puerto = 3000;
+
+// Middleware de autorización
+function verificarToken(req, res, next) {
+  // Obtiene el token del header Authorization
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Formato: "Bearer TOKEN"
+
+  // Si no hay token, denega el acceso
+  if (!token) {
+    return res.status(401).json({ error: "Acceso denegado. Token no proporcionado." });
+  }
+
+  try {
+    // Verifica el token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.usuario = decoded; // Guardar la info del usuario en la request
+    next(); // Continua con la siguiente función
+  } catch (error) {
+    return res.status(403).json({ error: "Token inválido o expirado." });
+  }
+}
 
 const categorias=require('./emercado-api-main/cats/cat.json');
 const publish=require('./emercado-api-main/sell/publish.json');
@@ -26,29 +40,30 @@ const cats=require('./emercado-api-main/cats/cat.json');
 app.use(cors()); 
 app.use(express.json());
 
+// Ruta raíz (puede quedar sin protección para verificar que el servidor funciona)
 app.get("/", (req, res) => {
   res.send("Servidor funcionando correctamente");
 });
 
-
-app.get("/api/categorias", (req, res) => {  //trae el json que contiene las categorias y su descripción
+// RUTAS PROTEGIDAS - se agrega verificarToken como segundo parámetro
+app.get("/api/categorias", verificarToken, (req, res) => {  //trae el json que contiene las categorias y su descripción
   res.json(categorias);
 });
 
-app.get("/api/publish", (req, res) => {  //trae publish.json
+app.get("/api/publish", verificarToken, (req, res) => {  //trae publish.json
   res.json(publish);
 });
 
-app.get("/api/cart", (req, res) => {  //trae cart.json
+app.get("/api/cart", verificarToken, (req, res) => {  //trae cart.json
   res.json(cart);
 });
 
-app.get("/api/cats", (req, res) => {  //trae cats.json
+app.get("/api/cats", verificarToken, (req, res) => {  //trae cats.json
   res.json(cart);
 });
 
 
-app.get("/api/categorias/:catID", (req, res) => { //traigo los productos que estan en cada categoria
+app.get("/api/categorias/:catID", verificarToken, (req, res) => { //traigo los productos que estan en cada categoria
   const catID = req.params.catID;
   const archivoPath = path.join(__dirname, 'emercado-api-main', 'cats_products', `${catID}.json`); //con path.join evito problemas de ruta
   
@@ -61,7 +76,7 @@ app.get("/api/categorias/:catID", (req, res) => { //traigo los productos que est
   }
 });
 
-app.get("/api/infoProducto", (req, res) => {  //trae la información de cada producto
+app.get("/api/infoProducto", verificarToken, (req, res) => {  //trae la información de cada producto
   const dirProducto = path.join(__dirname, 'emercado-api-main', 'products');
   let info = [];
 
@@ -79,7 +94,7 @@ app.get("/api/infoProducto", (req, res) => {  //trae la información de cada pro
   }
 });
 
-app.get("/api/comentarios", (req, res) => {  //trae los comentarios
+app.get("/api/comentarios", verificarToken, (req, res) => {  //trae los comentarios
   const dirComentario = path.join(__dirname, 'emercado-api-main', 'products_comments');
   let listaCom = [];
 
@@ -97,7 +112,7 @@ app.get("/api/comentarios", (req, res) => {  //trae los comentarios
   }
 });
 
-
+// Ruta de login - Sin protección (debe ser accesible sin token)
 // POST /login
 app.post("/login", (req, res) => {
   const { usuario, password } = req.body;
