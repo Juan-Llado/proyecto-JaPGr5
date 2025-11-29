@@ -2,8 +2,19 @@ const express = require("express");
 const fs = require("fs"); //agrego fs y path para poder leer y armar las rutas para cada categoria de manera dinamica
 const path = require("path");
 const cors = require("cors"); //lo uso para permitir que el frontend pueda hacer peticiones al servidor aunque estén en orígenes distintos
-
 const app = express();
+
+
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
+
+
+
+
+
+
+
+
 const puerto = 3000;
 
 const categorias=require('./emercado-api-main/cats/cat.json');
@@ -85,6 +96,25 @@ app.get("/api/comentarios", (req, res) => {  //trae los comentarios
     res.status(500).json({ error: "Error leyendo los comentarios" });
   }
 });
+
+
+// POST /login
+app.post("/login", (req, res) => {
+  const { usuario, password } = req.body;
+
+  if (!usuario || !password) {
+    return res.status(400).json({ error: "Usuario y contraseña son obligatorios" });
+  }
+  
+  const token = jwt.sign(
+    { usuario },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
+
+  return res.json({ token });
+});
+
 
 
 app.listen(puerto, () => {
