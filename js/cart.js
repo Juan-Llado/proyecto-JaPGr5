@@ -4,11 +4,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
   carrito.forEach(p => {
-  if (!p.quantity || p.quantity < 1) {
-    p.quantity = 1;
-  }
-});
-localStorage.setItem("carrito", JSON.stringify(carrito));
+    if (!p.quantity || p.quantity < 1) {
+      p.quantity = 1;
+    }
+  });
+  localStorage.setItem("carrito", JSON.stringify(carrito));
 
   
   if (carrito.length === 0) {
@@ -16,7 +16,7 @@ localStorage.setItem("carrito", JSON.stringify(carrito));
     return;
   }
 
-    function actualizarContadorCarrito() {
+  function actualizarContadorCarrito() {
     const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
     let totalProductos = 0;
     
@@ -39,21 +39,20 @@ localStorage.setItem("carrito", JSON.stringify(carrito));
 
   carrito.forEach((producto, index) => {
     const itemHTML = `
-  <div class="card mb-3" id="producto-${index}">
-    <div class="row g-0">
-      <div class="col-md-4">
-        <img src="${producto.images[0]}" class="img-fluid rounded-start" alt="${producto.name}">
-      </div>
-      <div class="col-md-8">
-        <div class="card-body">
-          <h5 class="card-title">${producto.name}</h5>
-          <p class="card-text">Precio: ${producto.currency} ${producto.cost}</p>
-          <label for="cantidad-${index}">Cantidad:</label>
-          <input type="number" id="cantidad-${index}" class="form-control cantidad-input" min="1" value="${producto.quantity || 1}" data-index="${index}">
-          <p class="subtotal mt-2">Subtotal: ${producto.currency} ${(producto.cost * producto.quantity).toFixed(2)}</p>
-          <button class="btn btn-danger btn-eliminar mt-2" data-index="${index}">
-            <i class="fas fa-trash"></i> Eliminar
-          </button>
+      <div class="card mb-3">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="${producto.images[0]}" class="img-fluid rounded-start" alt="${producto.name}">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">${producto.name}</h5>
+              <p class="card-text">Precio: ${producto.currency} ${producto.cost}</p>
+              <label for="cantidad-${index}">Cantidad:</label>
+              <input type="number" id="cantidad-${index}" class="form-control cantidad-input" min="1" value="${producto.quantity || 1}" data-index="${index}">
+               <p class="subtotal mt-2">Subtotal: ${producto.currency} ${(producto.cost * producto.quantity).toFixed(2)}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -114,7 +113,7 @@ document.querySelectorAll(".btn-eliminar").forEach(button => {
     actualizarCostos();
   });
 
-function calcularSubtotal() {
+  function calcularSubtotal() {
     let subtotal = 0;
     let moneda = "";
     
@@ -155,74 +154,141 @@ function calcularSubtotal() {
     document.getElementById("total-carrito").textContent = `${moneda} ${total.toFixed(2)}`;
   }
 
-// sección de Total y botón Comprar
-  document.getElementById("btn-comprar").addEventListener("click", () => {
-  // Validar dirección
-  const departamento = document.getElementById("departamento")?.value.trim();
-  const localidad = document.getElementById("localidad")?.value.trim();
-  const calle = document.getElementById("calle")?.value.trim();
-  const numero = document.getElementById("numero")?.value.trim();
-  const esquina = document.getElementById("esquina")?.value.trim();
+  // ============================================
+  // NUEVA FUNCIÓN: Enviar carrito al backend
+  // ============================================
+  async function enviarCarritoAlBackend() {
+    try {
+      // Preparar los datos para enviar al backend
+      const items = carrito.map(producto => ({
+        productId: producto.id,
+        quantity: producto.quantity,
+        price: producto.cost
+      }));
 
-  if (!departamento || !localidad || !calle || !numero || !esquina) {
-    alert("Por favor completá todos los campos de dirección.");
-    return;
+      const cartData = {
+        userId: null, // Puedes agregar el ID del usuario si tienes login
+        items: items
+      };
+
+      // Hacer el fetch al endpoint POST /cart
+      const response = await fetch('http://localhost:3000/cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(cartData)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error HTTP: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Carrito guardado en la base de datos:', data);
+      return data;
+
+    } catch (error) {
+      console.error('Error al enviar el carrito al backend:', error);
+      throw error;
+    }
   }
 
-  // Validar tipo de envío
-   const tipoEnvio = document.getElementById("tipoEnvio").value;
-  if (tipoEnvio === "") {
-    alert("Seleccioná un tipo de envío.");
-    return;
-  }
-  // Validar cantidades
-  const cantidades = document.querySelectorAll('.cantidad-input');
-  let cantidadesValidas = true;
-  cantidades.forEach(input => {
-    const valor = parseInt(input.value);
-    if (isNaN(valor) || valor <= 0) {
-      cantidadesValidas = false;
+  // sección de Total y botón Comprar
+  document.getElementById("btn-comprar").addEventListener("click", async () => {
+    // Validar dirección
+    const departamento = document.getElementById("departamento")?.value.trim();
+    const localidad = document.getElementById("localidad")?.value.trim();
+    const calle = document.getElementById("calle")?.value.trim();
+    const numero = document.getElementById("numero")?.value.trim();
+    const esquina = document.getElementById("esquina")?.value.trim();
+
+    if (!departamento || !localidad || !calle || !numero || !esquina) {
+      alert("Por favor completá todos los campos de dirección.");
+      return;
+    }
+
+    // Validar tipo de envío
+    const tipoEnvio = document.getElementById("tipoEnvio").value;
+    if (tipoEnvio === "") {
+      alert("Seleccioná un tipo de envío.");
+      return;
+    }
+    
+    // Validar cantidades
+    const cantidades = document.querySelectorAll('.cantidad-input');
+    let cantidadesValidas = true;
+    cantidades.forEach(input => {
+      const valor = parseInt(input.value);
+      if (isNaN(valor) || valor <= 0) {
+        cantidadesValidas = false;
+      }
+    });
+    if (!cantidadesValidas) {
+      alert("La cantidad de cada producto debe ser mayor a 0.");
+      return;
+    }
+
+    // Validar forma de pago
+    const formaPago = document.querySelector('input[name="pago"]:checked');
+    if (!formaPago) {
+      alert("Seleccioná una forma de pago.");
+      return;
+    }
+
+    let pagoValido = false;
+    if (formaPago.value === "tarjeta") {
+      const numeroTarjeta = document.getElementById("numeroTarjeta")?.value.trim();
+      const vencimiento = document.getElementById("vencimiento")?.value.trim();
+      const codigo = document.getElementById("codigo")?.value.trim();
+      pagoValido = numeroTarjeta && vencimiento && codigo;
+    } else if (formaPago.value === "transferencia") {
+      const cuenta = document.getElementById("cuentaBancaria")?.value.trim();
+      pagoValido = cuenta;
+    } else if (formaPago.value === "efectivo") {
+      const nombreEfectivo = document.getElementById("nombreEfectivo")?.value.trim();
+      pagoValido = nombreEfectivo;
+    }
+
+    if (!pagoValido || pagoValido.length === 0) {
+      alert("Completá todos los campos de la forma de pago seleccionada.");
+      return;
+    }
+
+    // ============================================
+    // NUEVO: Enviar carrito al backend
+    // ============================================
+    try {
+      // Deshabilitar el botón mientras se procesa
+      const btnComprar = document.getElementById("btn-comprar");
+      btnComprar.disabled = true;
+      btnComprar.textContent = "Procesando...";
+
+      // Enviar al backend
+      const resultado = await enviarCarritoAlBackend();
+
+      // Si todo está validado y guardado
+      const totalElement = document.getElementById("total-carrito").textContent;
+      alert(`¡Compra realizada con éxito!\nTotal: ${totalElement}\nNúmero de orden: ${resultado.orderId}\n\nGracias por tu compra.`);
+
+      // Limpiar el carrito después de la compra exitosa
+      localStorage.removeItem("carrito");
+      
+      // Recargar la página o redirigir
+      window.location.reload();
+
+    } catch (error) {
+      alert("Hubo un error al procesar tu compra. Por favor, intentá nuevamente.");
+      console.error(error);
+      
+      // Rehabilitar el botón
+      const btnComprar = document.getElementById("btn-comprar");
+      btnComprar.disabled = false;
+      btnComprar.textContent = "Comprar";
     }
   });
-  if (!cantidadesValidas) {
-    alert("La cantidad de cada producto debe ser mayor a 0.");
-    return;
-  }
 
-  // Validar forma de pago
-formaPago=document.querySelector('input[name="pago"]:checked')
-  if (!formaPago) {
-    alert("Seleccioná una forma de pago.");
-    return;
-  }
-
-  let pagoValido = false;
-  if (formaPago.value === "tarjeta") {
-    const numeroTarjeta = document.getElementById("numeroTarjeta")?.value.trim();
-    const vencimiento = document.getElementById("vencimiento")?.value.trim();
-    const codigo = document.getElementById("codigo")?.value.trim();
-    pagoValido = numeroTarjeta && vencimiento && codigo;
-  } else if (formaPago.value === "transferencia") {
-    const cuenta = document.getElementById("cuentaBancaria")?.value.trim();
-    pagoValido = cuenta;
-  } else if (formaPago.value === "efectivo") {
-  const nombreEfectivo = document.getElementById("nombreEfectivo")?.value.trim();
-  pagoValido = nombreEfectivo;
-  }
-
-
- if (!pagoValido || pagoValido.length === 0) {
-  alert("Completá todos los campos de la forma de pago seleccionada.");
-  return;
-}
-
-
-  // Si todo está validado
-  const totalElement = document.getElementById("total-carrito").textContent;
-  alert(`¡Compra realizada con éxito!\nTotal: ${totalElement}\n\nGracias por tu compra.`);
-});
-
- // Calcular costos iniciales
+  // Calcular costos iniciales
   actualizarCostos();
   
 });
