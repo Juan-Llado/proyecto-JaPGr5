@@ -240,12 +240,19 @@ if (!catID) {
       </div>
     `;
 
-    // Hacer la solicitud a la API
-    fetch(`https://japceibal.github.io/emercado-api/cats_products/${catID}.json`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('No se pudo cargar la categoría');
-        }
+
+  // Obtiene el token
+  const token = localStorage.getItem("token");
+  const headers = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  // Hace la solicitud a la API
+  fetch(`http://localhost:3000/api/categorias/${catID}`, { headers })
+    .then(response => {
+     if (!response.ok) {
+        throw new Error('No se pudo cargar la categoría');
+      }
         return response.json();
       })
       .then(categoryData => {

@@ -11,30 +11,42 @@ let btnEnviarComentario=document.getElementById("btnEnviarComentario");
 let fotoPerfil=document.getElementById("perfil");
 
 
-    fetch(`https://japceibal.github.io/emercado-api/products/${productoID}.json`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('No se pudo cargar la información del producto');
-        }
-        return response.json();
-      })
-      .then(producto => {
+// Obtener el token
+const token = localStorage.getItem("token");
+const headers = {};
+if (token) {
+  headers['Authorization'] = `Bearer ${token}`;
+}
+
+fetch(`http://localhost:3000/api/infoProducto`, { headers })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('No se pudo cargar la información del producto');
+    }
+    return response.json();
+  })
+  .then(productos => {
+    // Buscar el producto específico por ID
+    const producto = productos.find(p => p.id === parseInt(productoID));
+    
+    if (!producto) {
+      throw new Error('Producto no encontrado');
+    }  
       window.imagenes= Object.values(producto.images).filter(img => typeof img==="string"); //guardo url de las imagenes en un array.
-      info.innerHTML=`
-              <h5>${producto.name}</h5>
-              <p class="estiloInfo">${producto.description}</p>
-              <p class="estiloInfo"  id="vendidos">
-                <i class="bi bi-people-fill"></i> ${producto.soldCount} vendidos
-              </p>
-              <p id="precio">${producto.cost} ${producto.currency}</p>
-              <button class="btn ${clase}" id="agregarCarrito" data-id=${producto.id}></button>  
-              
-      `; //uso el atributo data-* (*en este caso lo llame id) en vez de solo id para poder relacionar cada botón a
+      info.innerHTML = `
+        <h5>${producto.name}</h5>
+        <p class="estiloInfo">${producto.description}</p>
+         <p class="estiloInfo" id="vendidos">
+          <i class="bi bi-people-fill"></i> ${producto.soldCount} vendidos
+        </p>
+        <p id="precio">${producto.cost} ${producto.currency}</p>
+        <button class="btn ${clase}" id="agregarCarrito" data-id=${producto.id}></button>  
+    `; //uso el atributo data-* (*en este caso lo llame id) en vez de solo id para poder relacionar cada botón a
       // su id correspodiente y asi poder guardar el icono de agregado,o no, para cada uno.
       cargarImagenes(window.imagenes);
       document.getElementById("agregarCarrito").addEventListener("click", () => {
-          carrito(producto);
-      });
+      carrito(producto);
+    });
       
       restaurarIconosCarrito();
       
@@ -43,36 +55,48 @@ let fotoPerfil=document.getElementById("perfil");
         mostrarProductosRelacionados(producto.relatedProducts);
       }
   
-      fetch(`https://japceibal.github.io/emercado-api/products_comments/${productoID}.json`)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('No se pudieron cargar los comentarios');
+// Cargar comentarios
+    const tokenComentarios = localStorage.getItem("token");
+    const headersComentarios = {};
+    if (tokenComentarios) {
+      headersComentarios['Authorization'] = `Bearer ${tokenComentarios}`;
     }
-    return response.json();
-  })
-  .then(comentarios => {
-    mostrarComentarios(comentarios);
+
+    fetch(`http://localhost:3000/api/comentarios`, { headers: headersComentarios })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('No se pudieron cargar los comentarios');
+        }
+        return response.json();
+      })
+      .then(todosComentarios => {
+        // Busca los comentarios del producto específico
+        // Los comentarios vienen como un array de arrays
+        let comentarios = [];
+        todosComentarios.forEach(comentariosArray => {
+          if (comentariosArray.length > 0 && comentariosArray[0].product === parseInt(productoID)) {
+            comentarios = comentariosArray;
+          }
+        });
+        mostrarComentarios(comentarios);
+      })
+      .catch(error => {
+        console.error('Error al cargar comentarios:', error);
+      });
   })
   .catch(error => {
-    console.error('Error al cargar comentarios:', error);
+    console.error('Error:', error);
+    info.innerHTML = `
+      <div class="col-12 text-center py-5">
+        <i class="bi bi-exclamation-triangle" style="font-size: 3rem;"></i>
+        <h4 class="mt-3">Error al cargar los datos del producto</h4>
+        <p>${error.message}</p>
+        <button class="btn btn-primary mt-3" onclick="location.reload()">
+          Reintentar
+        </button>
+      </div>
+    `;
   });
-
-    })
-      .catch(error => {
-        console.error('Error:', error);
-        info.innerHTML = `
-          <div class="col-12 text-center py-5">
-            <i class="bi bi-exclamation-triangle" style="font-size: 3rem;"></i>
-            <h4 class="mt-3">Error al cargar los datos del productos</h4>
-            <p>${error.message}</p>
-            <button class="btn btn-primary mt-3" onclick="cargarCategoria(${productoID})">
-              Reintentar
-            </button>
-          </div>
-        `;
-     
-
-      });
 
 
 window.cargarImagenes=function cargarImagenes(imagenes){
@@ -398,9 +422,23 @@ function inicializarCalificacion() {
 
     // Recargar comentarios para mostrar el nuevo
     setTimeout(() => {
-      fetch(`https://japceibal.github.io/emercado-api/products_comments/${productoID}.json`)
+      const tokenRecargar = localStorage.getItem("token");
+      const headersRecargar = {};
+      if (tokenRecargar) {
+        headersRecargar['Authorization'] = `Bearer ${tokenRecargar}`;
+      }
+
+      fetch(`http://localhost:3000/api/comentarios`, { headers: headersRecargar })
         .then(response => response.json())
-        .then(comentarios => mostrarComentarios(comentarios))
+        .then(todosComentarios => {
+          let comentarios = [];
+          todosComentarios.forEach(comentariosArray => {
+            if (comentariosArray.length > 0 && comentariosArray[0].product === parseInt(productoID)) {
+              comentarios = comentariosArray;
+            }
+          });
+          mostrarComentarios(comentarios);
+        })
         .catch(error => console.error('Error al recargar comentarios:', error));
     }, 1000);
   });

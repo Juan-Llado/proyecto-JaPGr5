@@ -55,7 +55,9 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         </div>
       </div>
-    `;
+    </div>
+  </div>
+`;
     cartContainer.insertAdjacentHTML("beforeend", itemHTML);
   });
 
@@ -78,6 +80,33 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+  // Eliminar producto del carrito
+document.querySelectorAll(".btn-eliminar").forEach(button => {
+  button.addEventListener("click", (e) => {
+    const index = parseInt(e.target.closest("button").dataset.index);
+    
+    // Eliminar del array
+    carrito.splice(index, 1);
+    
+    // Actualizar localStorage
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+    
+    // Eliminar visualmente el producto
+    document.getElementById(`producto-${index}`).remove();
+    
+    // Actualizar contador del badge
+    actualizarContadorCarrito();
+    
+    // Actualizar costos totales
+    actualizarCostos();
+    
+    // Si el carrito queda vacío, mostrar mensaje
+    if (carrito.length === 0) {
+      cartContainer.innerHTML = "";
+      emptyMessage.classList.remove("d-none");
+    }
+  });
+});
 
   // Actualizar costos cuando cambia el tipo de envío
   document.getElementById("tipoEnvio").addEventListener("change", () => {

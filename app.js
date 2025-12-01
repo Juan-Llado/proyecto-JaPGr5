@@ -1,0 +1,137 @@
+const express = require("express");
+const fs = require("fs"); //agrego fs y path para poder leer y armar las rutas para cada categoria de manera dinamica
+const path = require("path");
+const cors = require("cors"); //lo uso para permitir que el frontend pueda hacer peticiones al servidor aunque estén en orígenes distintos
+const app = express();
+
+
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
+
+const puerto = 3000;
+
+// Middleware de autorización
+function verificarToken(req, res, next) {
+  // Obtiene el token del header Authorization
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Formato: "Bearer TOKEN"
+
+  // Si no hay token, denega el acceso
+  if (!token) {
+    return res.status(401).json({ error: "Acceso denegado. Token no proporcionado." });
+  }
+
+  try {
+    // Verifica el token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.usuario = decoded; // Guardar la info del usuario en la request
+    next(); // Continua con la siguiente función
+  } catch (error) {
+    return res.status(403).json({ error: "Token inválido o expirado." });
+  }
+}
+
+const categorias=require('./emercado-api-main/cats/cat.json');
+const publish=require('./emercado-api-main/sell/publish.json');
+const cart=require('./emercado-api-main/cart/buy.json');
+const cats=require('./emercado-api-main/cats/cat.json');
+
+
+app.use(cors()); 
+app.use(express.json());
+
+// Ruta raíz (puede quedar sin protección para verificar que el servidor funciona)
+app.get("/", (req, res) => {
+  res.send("Servidor funcionando correctamente");
+});
+
+// RUTAS PROTEGIDAS - se agrega verificarToken como segundo parámetro
+app.get("/api/categorias", verificarToken, (req, res) => {  //trae el json que contiene las categorias y su descripción
+  res.json(categorias);
+});
+
+app.get("/api/publish", verificarToken, (req, res) => {  //trae publish.json
+  res.json(publish);
+});
+
+app.get("/api/cart", verificarToken, (req, res) => {  //trae cart.json
+  res.json(cart);
+});
+
+app.get("/api/cats", verificarToken, (req, res) => {  //trae cats.json
+  res.json(cart);
+});
+
+
+app.get("/api/categorias/:catID", verificarToken, (req, res) => { //traigo los productos que estan en cada categoria
+  const catID = req.params.catID;
+  const archivoPath = path.join(__dirname, 'emercado-api-main', 'cats_products', `${catID}.json`); //con path.join evito problemas de ruta
+  
+  try {
+    const data = fs.readFileSync(archivoPath, "utf8"); // leo el archivo
+    const productos = JSON.parse(data);                // lo convierte a json
+    res.json(productos);                               // lo envía al frontend
+  } catch (error) {
+    res.status(500).json({ error: "Error leyendo JSON" });
+  }
+});
+
+app.get("/api/infoProducto", verificarToken, (req, res) => {  //trae la información de cada producto
+  const dirProducto = path.join(__dirname, 'emercado-api-main', 'products');
+  let info = [];
+
+  try {
+    const productos = fs.readdirSync(dirProducto); // lista todos los archivos .json de la carpeta
+
+    productos.forEach(file => {
+      const data = fs.readFileSync(path.join(dirProducto, file), 'utf8');
+      info.push(JSON.parse(data));
+    });
+
+    res.json(info); // envío al frontend todos los productos
+  } catch (error) {
+    res.status(500).json({ error: "Error leyendo los productos" });
+  }
+});
+
+app.get("/api/comentarios", verificarToken, (req, res) => {  //trae los comentarios
+  const dirComentario = path.join(__dirname, 'emercado-api-main', 'products_comments');
+  let listaCom = [];
+
+  try {
+    const comentarios = fs.readdirSync(dirComentario); // lista todos los archivos .json de la carpeta
+
+    comentarios.forEach(file => {
+      const data = fs.readFileSync(path.join(dirComentario, file), 'utf8');
+      listaCom.push(JSON.parse(data));
+    });
+
+    res.json(listaCom); // envío al frontend todos los comentarios
+  } catch (error) {
+    res.status(500).json({ error: "Error leyendo los comentarios" });
+  }
+});
+
+// Ruta de login - Sin protección (debe ser accesible sin token)
+// POST /login
+app.post("/login", (req, res) => {
+  const { usuario, password } = req.body;
+
+  if (!usuario || !password) {
+    return res.status(400).json({ error: "Usuario y contraseña son obligatorios" });
+  }
+  
+  const token = jwt.sign(
+    { usuario },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
+
+  return res.json({ token });
+});
+
+
+
+app.listen(puerto, () => {
+  console.log(`Servidor corriendo en http://localhost:${puerto}`);
+});
